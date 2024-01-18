@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     public float speed; // It means max-speed player can have;
     public float accel;
     public float jumpPower;
+    public float rollPower;
 
     public float maximumSlopeAngle;
 
@@ -47,12 +48,30 @@ public class PlayerController : MonoBehaviour
     public Vector2 groundNormal;
     public bool hitAir;
     public float afterJump;
+    public bool isFacingRight;
     
+    // check player's state;
+    [Header("- is****")] 
+    public bool isJumping;
+    public bool isRolling;
+    public bool isAttacking;
+    public bool isHit;
+    public bool isAirHit;
+    
+    // help variables to check player's state; 
+    [Header("- help to check player's state")] 
+    public float rollingElapsedTime;
+    public float rollingDoneCheckTime;
+    
+    public float jumpingElapsedTime;
+    public float jumpingDoneCheckTime;
+
     // check if player is able to do;
     [Header("- can****")]
     public bool canMove;
     public bool canJump;
     public bool canRoll;
+    
     
     // player's gameobject children (to specify the position of head, foot, and kind of wall check) 
     [Header("- gameobject children")]
@@ -66,6 +85,8 @@ public class PlayerController : MonoBehaviour
     [Header("- tmp")]
     public int groundLayer; // ground's layer num
 
+    public float friction;
+
     #endregion
 
     #region Event functions
@@ -78,24 +99,47 @@ public class PlayerController : MonoBehaviour
     }
 
     /*
-     * concerned with physical movement :
+     * concerned with physics movement :
      * check if is grounded or in air, so check surroundings;
      * Update speedBy**** variables;
      * Update actual rigidbody velocity by above variables and surroundings, which means apply actual change on player;
      */
     private void FixedUpdate()
     {
+        CheckSurroundings();
+        UpdateSpeedByMove();
+        UpdateSpeedByRoll();
+        UpdateSpeedByAttack();
+        UpdateSpeedByHit();
         ApplyMovement();
     }
 
     /*
-     * Update Animation States;
+     * Update Animation States; which contains direction of playerGFX;
      * Update can**** variables;
-     * Update State
+     * Update player's state variables;
+     * Update State;
      */
     private void Update()
     {
-        throw new NotImplementedException();
+        UpdateAnimationParameters();
+        UpdateGfxDirection();
+        CheckTimeElapsed(ref jumpingElapsedTime, ref isJumping);
+        CheckTimeElapsed(ref rollingElapsedTime, ref isRolling);
+        
+    }
+
+    private void CheckTimeElapsed(ref float timeElapsed, ref bool state)
+    {
+        if (timeElapsed > 0)
+        {
+            timeElapsed -= Time.deltaTime;
+            if (timeElapsed <= 0)
+            {
+                timeElapsed = 0;
+                state = false;
+            }
+        }
     }
     
     #endregion
@@ -112,11 +156,24 @@ public class PlayerController : MonoBehaviour
         if (value.started && canJump)
         {
             _rigidbody2D.AddForce(new Vector2(0, jumpPower), ForceMode2D.Impulse);
+            isJumping = true;
+            jumpingElapsedTime = jumpingDoneCheckTime;
+        }
+    }
+    
+    public void OnRoll(InputAction.CallbackContext value)
+    {
+        if (value.started && canRoll)
+        {
+            speedByRoll = currentMoveDirection.x * rollPower;
+            isRolling = true;
+            rollingElapsedTime = rollingDoneCheckTime;
         }
     }
     
     #endregion
 
+    #region physics update functions
     private void CheckSurroundings()
     {
         RaycastHit2D hit = Physics2D.Raycast(footPos.position, Vector2.down, downFromFoot, groundLayer);
@@ -148,7 +205,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                if (_rigidbody2D.velocity.y <= 0 || hit.collider.GetComponent<PlatformEffector2D>() == null)
+                if (_rigidbody2D.velocity.y <= 0)
                 {
                     // no slope, on flat ground
                     if (groundNormalPerp.y == 0)
@@ -165,11 +222,76 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            onSlope = false;
+            isGrounded = true;
+        }
+    }
+
+    private void UpdateSpeedByMove()
+    {
+        if (currentMoveDirection.x != 0 && canMove)
+        {
+            speedByMove += accel * currentMoveDirection.x;
+        }
+        else
+        {
+            speedByMove = Mathf.Lerp(speedByMove, 0, friction * Time.fixedDeltaTime);
+        }
+        
+        ClampSpeedByMove();
+    }
+
+    private void ClampSpeedByMove()
+    {
+        if (Mathf.Abs(speedByMove) > speed)
+        {
+            speedByMove = (speedByMove / Mathf.Abs(speedByMove)) * speed;
+        }
+    }
+    
+    /**
+     * currently, UpdateSpeedBy**** functions below are just applying lerp to each variables;
+     * I'll fix this later for game purpose...
+     */
+    private void UpdateSpeedByRoll()
+    {
+        speedByRoll = Mathf.Lerp(speedByRoll, 0, friction * Time.fixedDeltaTime);
+    }
+    private void UpdateSpeedByAttack()
+    {
+        speedByAttack = Mathf.Lerp(speedByAttack, 0, friction * Time.fixedDeltaTime);
+    }
+    
+    private void UpdateSpeedByHit()
+    {
+        speedByHit = Mathf.Lerp(speedByHit, 0, friction * Time.fixedDeltaTime);
     }
 
     private void ApplyMovement()
     {
-        currentVelocity.Set(currentMoveDirection.x * speed, _rigidbody2D.velocity.y);
+        currentVelocity.Set(speedByMove + speedByRoll + speedByAttack + speedByHit, _rigidbody2D.velocity.y);
         _rigidbody2D.velocity = currentVelocity;
+    }
+    
+    #endregion
+
+    private void UpdateAnimationParameters()
+    {
+        _animator.SetFloat("speedByMoving", speedByMove);
+    }
+
+    private void UpdateGfxDirection()
+    {
+        if (currentMoveDirection.x > 0 && !isFacingRight)
+        {
+            isFacingRight = true;
+            transform.Rotate(0.0f, 180.0f, 0.0f);
+        } else if (currentMoveDirection.x < 0 && isFacingRight)
+        {
+            isFacingRight = false;
+            transform.Rotate(0.0f, 180.0f, 0.0f);
+        }
     }
 }

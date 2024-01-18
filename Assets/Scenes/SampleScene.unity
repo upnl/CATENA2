@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 448641127}
   - component: {fileID: 448641126}
   - component: {fileID: 448641125}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -247,7 +247,7 @@ Transform:
   m_GameObject: {fileID: 448641124}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.982, y: -0.976, z: 0}
+  m_LocalPosition: {x: 1.982, y: 0, z: 0}
   m_LocalScale: {x: 10.962, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -532,7 +532,7 @@ Transform:
   m_GameObject: {fileID: 1597582364}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.1, y: 0.309, z: 0}
+  m_LocalPosition: {x: 2.26, y: 1.02, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -615,28 +615,40 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
-  accel: 0
+  accel: 1
   jumpPower: 10
+  rollPower: 5
   maximumSlopeAngle: 0
-  currentMoveDirection: {x: 0, y: 0}
+  playerState: 0
   speedByMove: 0
   speedByRoll: 0
   speedByHit: 0
   speedByAttack: 0
   currentVelocity: {x: 0, y: 0}
+  currentMoveDirection: {x: 0, y: 0}
   isGrounded: 0
   onSlope: 0
-  playerState: 0
   groundNormalPerp: {x: 0, y: 0}
   groundNormal: {x: 0, y: 0}
   hitAir: 0
   afterJump: 0
-  canMove: 0
+  isFacingRight: 0
+  isJumping: 0
+  isRolling: 0
+  isAttacking: 0
+  isHit: 0
+  isAirHit: 0
+  rollingElapsedTime: 0
+  rollingDoneCheckTime: 1
+  jumpingElapsedTime: 0
+  jumpingDoneCheckTime: 1
+  canMove: 1
   canJump: 1
   canRoll: 0
-  footPos: {fileID: 0}
-  downFromFoot: 0
-  groundLayer: 0
+  footPos: {fileID: 803737351}
+  downFromFoot: 1
+  groundLayer: 7
+  friction: 5
 --- !u!114 &1597582369
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -695,7 +707,19 @@ MonoBehaviour:
     m_ActionId: 1655aa02-297a-4d2b-8172-4d8dabbbe0db
     m_ActionName: Player/Jump[/Keyboard/space]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1597582368}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnRoll
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: fb765697-94b1-411b-8ac5-acde4969cbcb
     m_ActionName: Player/Roll[/Keyboard/downArrow]
   - m_PersistentCalls:
@@ -768,7 +792,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: ae297123f091bbf4e8f1835eb98fb293, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 3.125, y: 1.71875}
