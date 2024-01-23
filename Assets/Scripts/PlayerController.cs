@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
     public float speedByMove;
     public float speedByRoll;
     public float speedByHit;
-    public float speedByAttack;
+    public float speedByDash;
     [Space]
     public Vector2 currentVelocity;
     public Vector2 currentMoveDirection;
@@ -71,8 +71,8 @@ public class PlayerController : MonoBehaviour
     public bool canMove;
     public bool canJump;
     public bool canRoll;
-    
-    
+
+
     // player's gameobject children (to specify the position of head, foot, and kind of wall check) 
     [Header("- gameobject children")]
     public Transform footPos;
@@ -83,9 +83,10 @@ public class PlayerController : MonoBehaviour
     
     // tmp variables
     [Header("- tmp")]
-    public int groundLayer; // ground's layer num
+    public LayerMask groundLayer; // ground's layer num
 
     public float friction;
+    public float rollFriction;
 
     #endregion
 
@@ -109,7 +110,7 @@ public class PlayerController : MonoBehaviour
         CheckSurroundings();
         UpdateSpeedByMove();
         UpdateSpeedByRoll();
-        UpdateSpeedByAttack();
+        UpdateSpeedByDash();
         UpdateSpeedByHit();
         ApplyMovement();
     }
@@ -124,23 +125,13 @@ public class PlayerController : MonoBehaviour
     {
         UpdateAnimationParameters();
         UpdateGfxDirection();
+        UpdateCanMove();
+        UpdateCanJump();
+        UpdateCanRoll();
         CheckTimeElapsed(ref jumpingElapsedTime, ref isJumping);
-        CheckTimeElapsed(ref rollingElapsedTime, ref isRolling);
-        
+        isRolling = _animator.GetCurrentAnimatorStateInfo(0).IsTag("rolling");
     }
-
-    private void CheckTimeElapsed(ref float timeElapsed, ref bool state)
-    {
-        if (timeElapsed > 0)
-        {
-            timeElapsed -= Time.deltaTime;
-            if (timeElapsed <= 0)
-            {
-                timeElapsed = 0;
-                state = false;
-            }
-        }
-    }
+    
     
     #endregion
 
@@ -155,8 +146,11 @@ public class PlayerController : MonoBehaviour
     {
         if (value.started && canJump)
         {
+            _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, 0);
             _rigidbody2D.AddForce(new Vector2(0, jumpPower), ForceMode2D.Impulse);
+            isGrounded = false;
             isJumping = true;
+            canJump = false;
             jumpingElapsedTime = jumpingDoneCheckTime;
         }
     }
@@ -165,11 +159,13 @@ public class PlayerController : MonoBehaviour
     {
         if (value.started && canRoll)
         {
-            speedByRoll = currentMoveDirection.x * rollPower;
+            speedByRoll = (isFacingRight? 1 : -1) * rollPower;
             isRolling = true;
             rollingElapsedTime = rollingDoneCheckTime;
+            _animator.SetTrigger("roll");
         }
     }
+    
     
     #endregion
 
@@ -177,7 +173,8 @@ public class PlayerController : MonoBehaviour
     private void CheckSurroundings()
     {
         RaycastHit2D hit = Physics2D.Raycast(footPos.position, Vector2.down, downFromFoot, groundLayer);
-        Debug.DrawRay(hit.point, groundNormalPerp);
+        Debug.DrawRay(footPos.position,new Vector3(0,-1 * downFromFoot,0), new Color(0,1,0)); 
+        Debug.DrawRay(hit.point, groundNormalPerp, new Color(1, 0, 0));
 
         if (hit)
         {
@@ -207,9 +204,11 @@ public class PlayerController : MonoBehaviour
             {
                 if (_rigidbody2D.velocity.y <= 0)
                 {
+                    
                     // no slope, on flat ground
                     if (groundNormalPerp.y == 0)
                     {
+                        Time.timeScale = 1f;
                         onSlope = false;
                         isGrounded = true;
                     } 
@@ -225,7 +224,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             onSlope = false;
-            isGrounded = true;
+            isGrounded = false;
         }
     }
 
@@ -257,11 +256,11 @@ public class PlayerController : MonoBehaviour
      */
     private void UpdateSpeedByRoll()
     {
-        speedByRoll = Mathf.Lerp(speedByRoll, 0, friction * Time.fixedDeltaTime);
+        speedByRoll = Mathf.Lerp(speedByRoll, 0, rollFriction * Time.fixedDeltaTime);
     }
-    private void UpdateSpeedByAttack()
+    private void UpdateSpeedByDash()
     {
-        speedByAttack = Mathf.Lerp(speedByAttack, 0, friction * Time.fixedDeltaTime);
+        speedByDash = Mathf.Lerp(speedByDash, 0, friction * Time.fixedDeltaTime);
     }
     
     private void UpdateSpeedByHit()
@@ -271,15 +270,18 @@ public class PlayerController : MonoBehaviour
 
     private void ApplyMovement()
     {
-        currentVelocity.Set(speedByMove + speedByRoll + speedByAttack + speedByHit, _rigidbody2D.velocity.y);
+        currentVelocity.Set(speedByMove + speedByRoll + speedByDash + speedByHit, _rigidbody2D.velocity.y);
         _rigidbody2D.velocity = currentVelocity;
     }
     
     #endregion
 
+    #region update functions
     private void UpdateAnimationParameters()
     {
         _animator.SetFloat("speedByMoving", speedByMove);
+        _animator.SetFloat("yspeed", _rigidbody2D.velocity.y);
+        _animator.SetBool("isGrounded", isGrounded);
     }
 
     private void UpdateGfxDirection()
@@ -294,4 +296,51 @@ public class PlayerController : MonoBehaviour
             transform.Rotate(0.0f, 180.0f, 0.0f);
         }
     }
+
+    private void UpdateCanMove()
+    {
+        if (canMove)
+        {
+            if (isRolling) canMove = false;
+        } else if (!isRolling) canMove = true;
+    }
+    private void UpdateCanJump()
+    {
+        if (canJump)
+        {
+            if (!isGrounded) canJump = false;
+            if (isRolling) canJump = false;
+        } else if (!isJumping && isGrounded && !isRolling) canJump = true;
+    }
+    private void UpdateCanRoll()
+    {
+        if (canRoll)
+        {
+            if (!isGrounded) canRoll = false;
+            if (isRolling) canRoll = false;
+        } else if (isGrounded && !isRolling) canRoll = true;
+    }
+    private void CheckTimeElapsed(ref float timeElapsed, ref bool state)
+    {
+        if (timeElapsed > 0)
+        {
+            timeElapsed -= Time.deltaTime;
+            if (timeElapsed <= 0)
+            {
+                timeElapsed = 0;
+                state = false;
+            }
+        }
+    }
+    
+    #endregion
+    
+    #region public methods
+
+    public void Dash(float dashPower)
+    {
+        speedByDash = (isFacingRight? 1 : -1) * dashPower;
+    }
+    
+    #endregion
 }
