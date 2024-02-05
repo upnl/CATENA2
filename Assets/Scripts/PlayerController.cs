@@ -123,13 +123,13 @@ public class PlayerController : MonoBehaviour
      */
     private void Update()
     {
-        UpdateAnimationParameters();
-        UpdateGfxDirection();
-        UpdateCanMove();
-        UpdateCanJump();
-        UpdateCanRoll();
-        CheckTimeElapsed(ref jumpingElapsedTime, ref isJumping);
         isRolling = _animator.GetCurrentAnimatorStateInfo(0).IsTag("rolling");
+        isAttacking = _animator.GetCurrentAnimatorStateInfo(0).IsTag("attack");
+        UpdateAnimationParameters();
+        if (canMove) UpdateGfxDirection();
+        UpdateCanVariables();
+        CheckTimeElapsed(ref jumpingElapsedTime, ref isJumping);
+        
     }
     
     
@@ -152,6 +152,8 @@ public class PlayerController : MonoBehaviour
             isJumping = true;
             canJump = false;
             jumpingElapsedTime = jumpingDoneCheckTime;
+            
+            UpdateCanVariables();
         }
     }
     
@@ -163,6 +165,8 @@ public class PlayerController : MonoBehaviour
             isRolling = true;
             rollingElapsedTime = rollingDoneCheckTime;
             _animator.SetTrigger("roll");
+            
+            UpdateCanVariables();
         }
     }
     
@@ -284,25 +288,33 @@ public class PlayerController : MonoBehaviour
         _animator.SetBool("isGrounded", isGrounded);
     }
 
-    private void UpdateGfxDirection()
+    public void UpdateGfxDirection()
     {
         if (currentMoveDirection.x > 0 && !isFacingRight)
         {
             isFacingRight = true;
             transform.Rotate(0.0f, 180.0f, 0.0f);
-        } else if (currentMoveDirection.x < 0 && isFacingRight)
+        }
+        else if (currentMoveDirection.x < 0 && isFacingRight)
         {
             isFacingRight = false;
             transform.Rotate(0.0f, 180.0f, 0.0f);
         }
     }
 
+    public void UpdateCanVariables()
+    {
+        UpdateCanMove();
+        UpdateCanJump();
+        UpdateCanRoll();
+    }
+
     private void UpdateCanMove()
     {
         if (canMove)
         {
-            if (isRolling) canMove = false;
-        } else if (!isRolling) canMove = true;
+            if (isRolling || isAttacking) canMove = false;
+        } else if (!isRolling && !isAttacking) canMove = true;
     }
     private void UpdateCanJump()
     {
@@ -316,9 +328,9 @@ public class PlayerController : MonoBehaviour
     {
         if (canRoll)
         {
-            if (!isGrounded) canRoll = false;
+            if (!isGrounded || isAttacking) canRoll = false;
             if (isRolling) canRoll = false;
-        } else if (isGrounded && !isRolling) canRoll = true;
+        } else if (isGrounded && !isRolling && !isAttacking) canRoll = true;
     }
     private void CheckTimeElapsed(ref float timeElapsed, ref bool state)
     {
