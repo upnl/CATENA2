@@ -125,6 +125,7 @@ public class PlayerController : MonoBehaviour
     {
         isRolling = _animator.GetCurrentAnimatorStateInfo(0).IsTag("rolling");
         isAttacking = _animator.GetCurrentAnimatorStateInfo(0).IsTag("attack");
+        
         UpdateAnimationParameters();
         if (canMove) UpdateGfxDirection();
         UpdateCanVariables();

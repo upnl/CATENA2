@@ -1,0 +1,56 @@
+{
+    "name": "ExpeditionControlAction",
+    "maps": [
+        {
+            "name": "Expedition",
+            "id": "2c0f528c-75f0-4d1a-98a5-5dd7ae11a098",
+            "actions": [
+                {
+                    "name": "NumKeys",
+                    "type": "Button",
+                    "id": "a5ab089b-1daa-4679-b089-f90df3d2eea3",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "a1922002-1f33-48c1-9971-23684ca6f24a",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "Scale",
+                    "groups": "",
+                    "action": "NumKeys",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7aaf95b0-337e-431f-938b-3def7cf059d7",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "Scale(factor=2)",
+                    "groups": "",
+                    "action": "NumKeys",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "70463fa4-c702-44d0-8027-be2534bcbda5",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "Scale(factor=3)",
+                    "groups": "",
+                    "action": "NumKeys",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

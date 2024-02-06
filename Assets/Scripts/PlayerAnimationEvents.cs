@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class PlayerAnimationEvents : MonoBehaviour
 {
-    public HeroKnightCombatController combatController;
+    public CombatController combatController;
     
     public void CanAttack()
     {
-        combatController.canAttack = true;
+        combatController.CanAttack();
     }
 }
