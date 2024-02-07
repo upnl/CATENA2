@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public GameStateManager GameStateManager { get; private set; }
 
     */
+    public TimeManager TimeManager { get; private set; }
 
     private void Awake()
     {
@@ -25,5 +26,6 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         
         // if (PlayerDataManager == null) PlayerDataManager = GetComponentInChildren<PlayerDataManager>();
+        if (TimeManager == null) TimeManager = GetComponentInChildren<TimeManager>();
     }
 }
