@@ -30,12 +30,14 @@ public class Expedition : MonoBehaviour
 
     private void Update()
     {
+        // switch cool down mechanism;
         if (switchCoolDownElapsed > 0)
         {
             switchCoolDownElapsed -= Time.deltaTime;
             if (switchCoolDownElapsed <= 0) switchCoolDownElapsed = 0;
         }
-
+        
+        // zoom in and out when switch;
         if (isSwitching)
         {
             cinemachineVirtualCamera.m_Lens.OrthographicSize =
