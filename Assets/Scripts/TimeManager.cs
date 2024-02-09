@@ -6,11 +6,13 @@ using UnityEngine;
 public class TimeManager : MonoBehaviour
 {
 
-    private float _startTime;
-    private float _currentRealTimeToGetBack;
+    [SerializeField] private float _startTime;
+    [SerializeField] private float _currentRealTimeToGetBack;
 
-    private float _originalTimeScale;
-    private float _originalFixedDeltaTime;
+    [SerializeField] private float _originalTimeScale;
+    [SerializeField] private float _originalFixedDeltaTime;
+
+    public float showTimeScale;
 
     private void Start()
     {
@@ -18,14 +20,21 @@ public class TimeManager : MonoBehaviour
         _originalFixedDeltaTime = Time.fixedDeltaTime;
     }
 
+    private void Update()
+    {
+        showTimeScale = Time.timeScale;
+    }
+
     public void ChangeTimeRate(float changeRate, float realTimeToGetBack)
     {
+        /*
         if (_startTime + _currentRealTimeToGetBack < Time.realtimeSinceStartup + realTimeToGetBack)
         {
             StopCoroutine("ChangeTimeRateCoroutine");
             Time.timeScale = _originalTimeScale;
             Time.fixedDeltaTime = _originalFixedDeltaTime;
         }
+        */
         StartCoroutine(ChangeTimeRateCoroutine(changeRate, realTimeToGetBack));
     }
 
@@ -41,8 +50,12 @@ public class TimeManager : MonoBehaviour
         _startTime = Time.realtimeSinceStartup;
         _currentRealTimeToGetBack = realTimeToGetBack;
 
+        Debug.Log("Change Time Scale! RealTimeToGetBack : " + realTimeToGetBack);
+
         // wait for seconds we set;
         yield return new WaitForSecondsRealtime(realTimeToGetBack);
+        
+        Debug.Log("Get Back Time Scale!");
 
         // get original values back;
         Time.timeScale = _originalTimeScale;

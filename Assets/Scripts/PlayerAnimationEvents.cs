@@ -10,4 +10,9 @@ public class PlayerAnimationEvents : MonoBehaviour
     {
         combatController.CanAttack();
     }
+
+    public void Attack(int index)
+    {
+        combatController.Attack(index);
+    }
 }

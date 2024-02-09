@@ -42,7 +42,6 @@ public class MonsterController : MonoBehaviour
     [Header("- Monster's current states")]
     [Header("- speedBy****")]
     public float speedByMove;
-    public float speedByRoll;
     public float speedByHit;
     public float speedByDash;
     [Space]
@@ -60,16 +59,22 @@ public class MonsterController : MonoBehaviour
     public float afterJump;
     public bool isFacingRight;
     [Space] 
+    
     [Header("- to chase player")] 
     public bool isChasingPlayer;
     public float playerDetectTime;
     public float playerDetectTimeElapsed;
     public GameObject playerGameObject;
+
+    [Space] [Header("- combat interaction")]
+    public float hitTimeElapsed;
+    public float stunTimeElapsed;
     
     // check monster's state;
     [Header("- is****")] 
     public bool isJumping;
     public bool isAttacking;
+    public bool isStun;
     public bool isHit;
     public bool isAirHit;
     
@@ -104,7 +109,7 @@ public class MonsterController : MonoBehaviour
     #region Event functions
     
     /*
-     * for checking box sizes, etc.
+     * for checking box sizes, etc in editing level;
      */
     private void OnDrawGizmos()
     {
@@ -143,12 +148,14 @@ public class MonsterController : MonoBehaviour
     private void Update()
     {
         isAttacking = _animator.GetCurrentAnimatorStateInfo(0).IsTag("attack");
-        
+
         UpdateAnimationParameters();
         if (canMove) UpdateGfxDirection();
         UpdateCanVariables();
         UpdateNextAction();
+        UpdateHitState();
         CheckTimeElapsed(ref jumpingElapsedTime, ref isJumping);
+        CheckTimeElapsed(ref stunTimeElapsed, ref isStun);
     }
     #endregion
     
@@ -244,12 +251,12 @@ public class MonsterController : MonoBehaviour
     
     private void UpdateSpeedByHit()
     {
-        speedByHit = Mathf.Lerp(speedByHit, 0, friction * Time.fixedDeltaTime);
+        if (isGrounded) speedByHit = Mathf.Lerp(speedByHit, 0, friction * Time.fixedDeltaTime);
     }
 
     private void ApplyMovement()
     {
-        currentVelocity.Set(speedByMove + speedByRoll + speedByDash + speedByHit, _rigidbody2D.velocity.y);
+        currentVelocity.Set(speedByMove + speedByDash + speedByHit, _rigidbody2D.velocity.y);
         _rigidbody2D.velocity = currentVelocity;
     }
     
@@ -261,6 +268,7 @@ public class MonsterController : MonoBehaviour
         _animator.SetFloat("speedByMoving", speedByMove);
         _animator.SetFloat("yspeed", _rigidbody2D.velocity.y);
         _animator.SetBool("isGrounded", isGrounded);
+        _animator.SetBool("isHit", isHit);
     }
 
     public void UpdateGfxDirection()
@@ -287,15 +295,15 @@ public class MonsterController : MonoBehaviour
     {
         if (canMove)
         {
-            if (isAttacking) canMove = false;
-        } else if (!isAttacking) canMove = true;
+            if (isAttacking || isHit) canMove = false;
+        } else if (!isAttacking && !isHit) canMove = true;
     }
     private void UpdateCanJump()
     {
         if (canJump)
         {
-            if (!isGrounded || isAttacking) canJump = false;
-        } else if (!isJumping && isGrounded  && !isAttacking) canJump = true;
+            if (!isGrounded || isAttacking || isHit) canJump = false;
+        } else if (!isJumping && isGrounded  && !isAttacking && !isHit) canJump = true;
     }
 
     private void UpdateNextAction()
@@ -311,7 +319,6 @@ public class MonsterController : MonoBehaviour
 
             if (isChasingPlayer)
             {
-                Debug.Log(playerDetectColsArray.Length);
                 // if detect the player, keep chasing;
                 if (playerDetectColsArray.Length != 0) playerDetectTimeElapsed = playerDetectTime;
                 else if (playerDetectTimeElapsed <= 0)
@@ -371,6 +378,18 @@ public class MonsterController : MonoBehaviour
             }
         }
     }
+
+    private void UpdateHitState()
+    {
+        if (isGrounded)
+        {
+            hitTimeElapsed -= Time.deltaTime;
+            if (hitTimeElapsed <= 0 && !isStun)
+            {
+                isHit = false;
+            }
+        }
+    }
     private void CheckTimeElapsed(ref float timeElapsed, ref bool state)
     {
         if (timeElapsed > 0)
@@ -382,6 +401,41 @@ public class MonsterController : MonoBehaviour
                 state = false;
             }
         }
+    }
+    
+    #endregion
+    
+    #region public methods
+    
+    /*
+     * method : Hit(float damage, Vector2 knockback);
+     * parameters
+     * - float damage : how much damage on player; we have to calculate real damage on player in this method using def, buff, etc later;
+     * - Vector2 knockback : basically, AddForce(knockback.x * (player.x < monster.x ? -1 : 1),  tmp);
+     * - float stunTime : stunTime, literally;
+     * - int direction : -1 - player.x < monster.x, 1 - otherwise
+     */
+    public void Hit(float damage, Vector2 knockback, float stunTime, int direction)
+    {
+        isHit = true;
+        if (stunTime > 0)
+        {
+            stunTimeElapsed = stunTime;
+            isStun = true;
+        }
+
+        currentMoveDirection.x = direction;
+        UpdateGfxDirection();
+        speedByHit = knockback.x * (transform.rotation.y < 0 ? -1 : 1);
+
+        _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, 0);
+        _rigidbody2D.AddForce(new Vector2(0, knockback.y), ForceMode2D.Impulse);
+        isGrounded = false;
+        isJumping = true;
+        canJump = false;
+        jumpingElapsedTime = jumpingDoneCheckTime;
+        
+        UpdateCanVariables();
     }
     
     #endregion

@@ -349,10 +349,22 @@ public class PlayerController : MonoBehaviour
     #endregion
     
     #region public methods
-
+    
     public void Dash(float dashPower)
     {
         speedByDash = (isFacingRight? 1 : -1) * dashPower;
+    }
+
+    /*
+     * method : Hit(float damage, Vector2 knockback);
+     * parameters
+     * - float damage : how much damage on player; we have to calculate real damage on player in this method using def, buff, etc later;
+     * - Vector2 knockback : basically, AddForce(knockback.x * (player.x < monster.x ? -1 : 1),  tmp);
+     * - float stunTime : stunTime, literally;
+     */
+    public void Hit(float damage, Vector2 knockback, float stunTime)
+    {
+        
     }
     
     #endregion

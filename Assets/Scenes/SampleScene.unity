@@ -324,8 +324,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cb89dd7580e8472391cc1195da88fb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackBoundaries:
+  - {x: 1.47, y: 1.27}
+  attackBoundaryOffsets:
+  - {x: 0.93, y: 0.23}
+  attackKnockBacks:
+  - {x: 2, y: 3}
+  attackDamages:
+  - 10
   canAttack: 1
   attackCheckElapsedTime: 0
+  offsetAccordingToPlayerDirection: {x: -0.93, y: 0.23}
+  attackCheckCols: []
+  monsterLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!114 &191779518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -587,7 +600,7 @@ MonoBehaviour:
   playerAction: {fileID: -944628639613478452, guid: 42440932dbdca44eba0c7383ae4ab806, type: 3}
   nonPlayerAction: {fileID: -944628639613478452, guid: 1208b2da0f7444636b1495a79addff0c, type: 3}
   currentPlayerNum: 0
-  switchCoolDown: 1
+  switchCoolDown: 3
   switchCoolDownElapsed: 0
   cinemachineVirtualCamera: {fileID: 321913479}
   originalCameraSize: 6
@@ -753,7 +766,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 368443126}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: MonsterFoor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1333,6 +1346,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 974a90fe3e9db402683aa31585e0378a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _startTime: 0
+  _currentRealTimeToGetBack: 0
+  _originalTimeScale: 0
+  _originalFixedDeltaTime: 0
+  showTimeScale: 0
 --- !u!1 &803737350
 GameObject:
   m_ObjectHideFlags: 0
@@ -1540,7 +1558,7 @@ GameObject:
   - component: {fileID: 1269373754}
   - component: {fileID: 1269373753}
   - component: {fileID: 1269373755}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Goblin_GFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1685,8 +1703,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cb89dd7580e8472391cc1195da88fb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackBoundaries:
+  - {x: 1.47, y: 1.27}
+  attackBoundaryOffsets:
+  - {x: 0.93, y: 0.23}
+  attackKnockBacks:
+  - {x: 2, y: 3}
+  attackDamages:
+  - 10
   canAttack: 1
   attackCheckElapsedTime: 0
+  offsetAccordingToPlayerDirection: {x: -0.93, y: 0.23}
+  attackCheckCols: []
+  monsterLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!114 &1500082325
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2149,8 +2180,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cb89dd7580e8472391cc1195da88fb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackBoundaries:
+  - {x: 1.47, y: 1.27}
+  attackBoundaryOffsets:
+  - {x: 0.93, y: 0.23}
+  attackKnockBacks:
+  - {x: 2, y: 3}
+  attackDamages:
+  - 10
   canAttack: 1
   attackCheckElapsedTime: 0
+  offsetAccordingToPlayerDirection: {x: -0.93, y: 0.23}
+  attackCheckCols: []
+  monsterLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &1599494763
 GameObject:
   m_ObjectHideFlags: 0
@@ -2402,9 +2446,9 @@ GameObject:
   - component: {fileID: 2006917274}
   - component: {fileID: 2006917273}
   - component: {fileID: 2006917272}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Monster_Goblin
-  m_TagString: Untagged
+  m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2447,7 +2491,6 @@ MonoBehaviour:
   changeActionIntervalElapsed: 0
   maximumSlopeAngle: 60
   speedByMove: 0
-  speedByRoll: 0
   speedByHit: 0
   speedByDash: 0
   currentVelocity: {x: 0, y: 0}
@@ -2463,8 +2506,11 @@ MonoBehaviour:
   playerDetectTime: 10
   playerDetectTimeElapsed: 0
   playerGameObject: {fileID: 0}
+  hitTimeElapsed: 0
+  stunTimeElapsed: 0
   isJumping: 0
   isAttacking: 0
+  isStun: 0
   isHit: 0
   isAirHit: 0
   jumpingElapsedTime: 0

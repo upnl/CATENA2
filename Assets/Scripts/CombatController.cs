@@ -15,11 +15,24 @@ public class CombatController : MonoBehaviour
     protected Animator Animator => _animator;
     protected Rigidbody2D Rigidbody => _rigidbody;
     
+    // Player's attack informations
+    public Vector2[] attackBoundaries;
+    public Vector2[] attackBoundaryOffsets;
+    public Vector2[] attackKnockBacks;
+    public float[] attackDamages;
+    
     // can****; indicate if player can do some action;
     public bool canAttack;
     
     // help variables to check player's state; 
     public float attackCheckElapsedTime;
+    
+    // store current states;
+    public Vector2 offsetAccordingToPlayerDirection;
+
+    // help player-monster combat interaction;
+    public Collider2D[] attackCheckCols;
+    public LayerMask monsterLayer;
     
     private void Start()
     {
@@ -32,6 +45,20 @@ public class CombatController : MonoBehaviour
         UpdateCanAttack();
         if (attackCheckElapsedTime > 0) attackCheckElapsedTime -= Time.deltaTime;
     }
+    
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        
+        for (int i = 0; i<attackBoundaries.Length; i++)
+        {
+            offsetAccordingToPlayerDirection = attackBoundaryOffsets[i];
+            offsetAccordingToPlayerDirection.x *= (transform.rotation.y < 0 ? 1 : -1);
+            Gizmos.DrawWireCube((Vector2) transform.position + offsetAccordingToPlayerDirection, 
+                attackBoundaries[i] );
+        }
+        
+    }
 
     protected virtual void UpdateCanAttack()
     {
@@ -43,6 +70,27 @@ public class CombatController : MonoBehaviour
             }
         } else if (attackCheckElapsedTime <= 0 && _playerController.isGrounded && 
                    !_playerController.isRolling && !_playerController.isAttacking) canAttack = true;
+    }
+
+    public void Attack(int index)
+    {
+        Debug.Log("!!");
+        offsetAccordingToPlayerDirection = attackBoundaryOffsets[index];
+        offsetAccordingToPlayerDirection.x *= (transform.rotation.y < 0 ? 1 : -1);
+        attackCheckCols = Physics2D.OverlapBoxAll((Vector2)
+            transform.position + offsetAccordingToPlayerDirection, 
+            attackBoundaries[index], 0, monsterLayer);
+
+        foreach (var i in attackCheckCols)
+        {
+            if (i.CompareTag("Monster"))
+            {
+                Debug.Log("??");
+                MonsterController monsterController = i.GetComponent<MonsterController>();
+                int attackDirection = i.transform.position.x > transform.position.x ? -1 : 1;
+                monsterController.Hit(attackDamages[index], attackKnockBacks[index], 1, attackDirection);
+            }
+        }
     }
 
     public void CanAttack()
