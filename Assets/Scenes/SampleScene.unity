@@ -354,7 +354,7 @@ MonoBehaviour:
   speed: 5
   accel: 1
   jumpPower: 10
-  rollPower: 12
+  rollPower: 8
   maximumSlopeAngle: 0
   playerState: 0
   speedByMove: 0
@@ -1733,7 +1733,7 @@ MonoBehaviour:
   speed: 5
   accel: 1
   jumpPower: 10
-  rollPower: 12
+  rollPower: 8
   maximumSlopeAngle: 0
   playerState: 0
   speedByMove: 0
@@ -2039,7 +2039,7 @@ MonoBehaviour:
   speed: 5
   accel: 1
   jumpPower: 10
-  rollPower: 12
+  rollPower: 8
   maximumSlopeAngle: 0
   playerState: 0
   speedByMove: 0

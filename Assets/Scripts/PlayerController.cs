@@ -213,7 +213,6 @@ public class PlayerController : MonoBehaviour
                     // no slope, on flat ground
                     if (groundNormalPerp.y == 0)
                     {
-                        Time.timeScale = 1f;
                         onSlope = false;
                         isGrounded = true;
                     } 
@@ -262,6 +261,15 @@ public class PlayerController : MonoBehaviour
     private void UpdateSpeedByRoll()
     {
         speedByRoll = Mathf.Lerp(speedByRoll, 0, rollFriction * Time.fixedDeltaTime);
+
+        if (isRolling)
+        {
+            gameObject.layer = 8; // player rolling
+        }
+        else
+        {
+            gameObject.layer = 3; // player
+        }
     }
     private void UpdateSpeedByDash()
     {

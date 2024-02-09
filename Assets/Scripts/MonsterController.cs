@@ -198,7 +198,6 @@ public class MonsterController : MonoBehaviour
                     // no slope, on flat ground
                     if (groundNormalPerp.y == 0)
                     {
-                        Time.timeScale = 1f;
                         onSlope = false;
                         isGrounded = true;
                     } 
@@ -423,6 +422,8 @@ public class MonsterController : MonoBehaviour
             stunTimeElapsed = stunTime;
             isStun = true;
         }
+        
+        GameManager.Instance.TimeManager.ChangeTimeRate(0.5f, 0.2f);
 
         currentMoveDirection.x = direction;
         UpdateGfxDirection();

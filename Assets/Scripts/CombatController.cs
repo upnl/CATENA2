@@ -74,7 +74,6 @@ public class CombatController : MonoBehaviour
 
     public void Attack(int index)
     {
-        Debug.Log("!!");
         offsetAccordingToPlayerDirection = attackBoundaryOffsets[index];
         offsetAccordingToPlayerDirection.x *= (transform.rotation.y < 0 ? 1 : -1);
         attackCheckCols = Physics2D.OverlapBoxAll((Vector2)
@@ -85,7 +84,6 @@ public class CombatController : MonoBehaviour
         {
             if (i.CompareTag("Monster"))
             {
-                Debug.Log("??");
                 MonsterController monsterController = i.GetComponent<MonsterController>();
                 int attackDirection = i.transform.position.x > transform.position.x ? -1 : 1;
                 monsterController.Hit(attackDamages[index], attackKnockBacks[index], 1, attackDirection);
