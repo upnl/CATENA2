@@ -36,6 +36,8 @@ public class MonsterController : MonoBehaviour
     private Rigidbody2D _rigidbody2D;
     private Animator _animator;
     private CapsuleCollider2D _collider;
+    private MonsterCombatController _monsterCombatController;
+    private DamageFlash _damageFlash;
     
     
     // store monster's current state
@@ -122,6 +124,8 @@ public class MonsterController : MonoBehaviour
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _animator = GetComponentInChildren<Animator>();
         _collider = GetComponent<CapsuleCollider2D>();
+        _monsterCombatController = GetComponent<MonsterCombatController>();
+        _damageFlash = GetComponent<DamageFlash>();
     }
     
     /*
@@ -335,6 +339,7 @@ public class MonsterController : MonoBehaviour
                 if (playerDetectColsArray.Length != 0)
                 {
                     // attack;
+                    _monsterCombatController.OnAttack(0);
                 }
                 else
                 {
@@ -422,12 +427,16 @@ public class MonsterController : MonoBehaviour
             stunTimeElapsed = stunTime;
             isStun = true;
         }
-        
-        GameManager.Instance.TimeManager.ChangeTimeRate(0.5f, 0.2f);
 
-        currentMoveDirection.x = direction;
-        UpdateGfxDirection();
-        speedByHit = knockback.x * (transform.rotation.y < 0 ? -1 : 1);
+        hitTimeElapsed = 0.1f;
+        
+        // tmp
+        GameManager.Instance.TimeManager.ChangeTimeRate(0.5f, 0.2f);
+        
+        // flash effect
+        _damageFlash.Flash();
+        
+        speedByHit = -knockback.x * direction;
 
         _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, 0);
         _rigidbody2D.AddForce(new Vector2(0, knockback.y), ForceMode2D.Impulse);

@@ -1,21 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class CombatController : MonoBehaviour
+public class MonsterCombatController : MonoBehaviour
 {
-    // Player's Components;
-    private PlayerController _playerController;
+    // Monster's Components;
+    private MonsterController _monsterController;
     private Animator _animator;
     private Rigidbody2D _rigidbody;
     
-    // Properties for Player's components;
-    protected PlayerController PlayerController => _playerController;
+    // Properties for Monster's components;
+    protected MonsterController MonsterController => _monsterController;
     protected Animator Animator => _animator;
     protected Rigidbody2D Rigidbody => _rigidbody;
     
-    // Player's attack informations
+    // Monster's attack informations
     public Vector2[] attackBoundaries;
     public Vector2[] attackBoundaryOffsets;
     public Vector2[] attackKnockBacks;
@@ -25,7 +24,7 @@ public class CombatController : MonoBehaviour
     // can****; indicate if player can do some action;
     public bool canAttack;
     
-    // help variables to check player's state; 
+    // help variables to check Monster's state; 
     public float attackCheckElapsedTime;
     
     // store current states;
@@ -33,11 +32,11 @@ public class CombatController : MonoBehaviour
 
     // help player-monster combat interaction;
     public Collider2D[] attackCheckCols;
-    public LayerMask monsterLayer;
+    public LayerMask playerLayer;
     
     private void Start()
     {
-        _playerController = GetComponent<PlayerController>();
+        _monsterController = GetComponent<MonsterController>();
         _animator = GetComponentInChildren<Animator>();
     }
 
@@ -49,7 +48,7 @@ public class CombatController : MonoBehaviour
     
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.blue;
+        Gizmos.color = Color.red;
         
         for (int i = 0; i<attackBoundaries.Length; i++)
         {
@@ -65,12 +64,17 @@ public class CombatController : MonoBehaviour
     {
         if (canAttack)
         {
-            if (!_playerController.isGrounded || _playerController.isRolling)
+            if (!_monsterController.isGrounded)
             {
                 canAttack = false;
             }
-        } else if (attackCheckElapsedTime <= 0 && _playerController.isGrounded && 
-                   !_playerController.isRolling && !_playerController.isAttacking) canAttack = true;
+        } else if (attackCheckElapsedTime <= 0 && _monsterController.isGrounded && 
+                   !_monsterController.isAttacking) canAttack = true;
+    }
+
+    public virtual void OnAttack(int attackIndex)
+    {
+        // will be override;
     }
 
     public void Attack(int index)
@@ -79,15 +83,15 @@ public class CombatController : MonoBehaviour
         offsetAccordingToPlayerDirection.x *= (transform.rotation.y < 0 ? 1 : -1);
         attackCheckCols = Physics2D.OverlapBoxAll((Vector2)
             transform.position + offsetAccordingToPlayerDirection, 
-            attackBoundaries[index], 0, monsterLayer);
+            attackBoundaries[index], 0, playerLayer);
 
         foreach (var i in attackCheckCols)
         {
-            if (i.CompareTag("Monster"))
+            if (i.CompareTag("Player"))
             {
-                MonsterController monsterController = i.GetComponent<MonsterController>();
+                PlayerController playerController = i.GetComponent<PlayerController>();
                 int attackDirection = i.transform.position.x > transform.position.x ? -1 : 1;
-                monsterController.Hit(attackDamages[index], attackKnockBacks[index], attackStunTimes[index], attackDirection);
+                playerController.Hit(attackDamages[index], attackKnockBacks[index], attackStunTimes[index], attackDirection);
             }
         }
     }

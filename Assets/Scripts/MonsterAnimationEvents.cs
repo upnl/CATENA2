@@ -2,19 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAnimationEvents : MonoBehaviour
+public class MonsterAnimationEvents : MonoBehaviour
 {
-    public CombatController combatController;
-    public PlayerController playerController;
+    public MonsterCombatController combatController;
     
     public void CanAttack()
     {
         combatController.CanAttack();
-    }
-
-    public void Dash(float dashPower)
-    {
-        playerController.Dash(dashPower);
     }
 
     public void Attack(int index)

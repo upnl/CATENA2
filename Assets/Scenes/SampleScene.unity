@@ -170,6 +170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   combatController: {fileID: 1500082324}
+  playerController: {fileID: 0}
 --- !u!95 &106305188
 Animator:
   serializedVersion: 5
@@ -237,7 +238,7 @@ SpriteRenderer:
   m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 3.125, y: 1.71875}
+  m_Size: {x: 31.25, y: 15.46875}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -332,6 +333,7 @@ MonoBehaviour:
   - {x: 2, y: 3}
   attackDamages:
   - 10
+  attackStunTimes: []
   canAttack: 1
   attackCheckElapsedTime: 0
   offsetAccordingToPlayerDirection: {x: -0.93, y: 0.23}
@@ -370,9 +372,12 @@ MonoBehaviour:
   hitAir: 0
   afterJump: 0
   isFacingRight: 0
+  hitTimeElapsed: 0
+  stunTimeElapsed: 0
   isJumping: 0
   isRolling: 0
   isAttacking: 0
+  isStun: 0
   isHit: 0
   isAirHit: 0
   rollingElapsedTime: 0
@@ -767,7 +772,7 @@ GameObject:
   m_Component:
   - component: {fileID: 368443126}
   m_Layer: 6
-  m_Name: MonsterFoor
+  m_Name: MonsterFoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -969,7 +974,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -1429,6 +1434,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   combatController: {fileID: 191779517}
+  playerController: {fileID: 0}
 --- !u!95 &1035708598
 Animator:
   serializedVersion: 5
@@ -1496,12 +1502,61 @@ SpriteRenderer:
   m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 3.125, y: 1.71875}
+  m_Size: {x: 31.25, y: 15.46875}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1247623080
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1247623082}
+  - component: {fileID: 1247623081}
+  m_Layer: 0
+  m_Name: Global Volume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1247623081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1247623080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: f44df94e4df2f4dd2aadb6618c4b4156, type: 2}
+--- !u!4 &1247623082
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1247623080}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.52967596, y: 0.9728858, z: 0.039816342}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1267095281
 GameObject:
   m_ObjectHideFlags: 0
@@ -1558,6 +1613,7 @@ GameObject:
   - component: {fileID: 1269373754}
   - component: {fileID: 1269373753}
   - component: {fileID: 1269373755}
+  - component: {fileID: 1269373756}
   m_Layer: 6
   m_Name: Goblin_GFX
   m_TagString: Untagged
@@ -1653,6 +1709,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1269373756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1269373752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8b5140d7c8064634bcbf18612d76df3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  combatController: {fileID: 2006917275}
 --- !u!1 &1500082322
 GameObject:
   m_ObjectHideFlags: 0
@@ -1711,6 +1780,7 @@ MonoBehaviour:
   - {x: 2, y: 3}
   attackDamages:
   - 10
+  attackStunTimes: []
   canAttack: 1
   attackCheckElapsedTime: 0
   offsetAccordingToPlayerDirection: {x: -0.93, y: 0.23}
@@ -1749,9 +1819,12 @@ MonoBehaviour:
   hitAir: 0
   afterJump: 0
   isFacingRight: 0
+  hitTimeElapsed: 0
+  stunTimeElapsed: 0
   isJumping: 0
   isRolling: 0
   isAttacking: 0
+  isStun: 0
   isHit: 0
   isAirHit: 0
   rollingElapsedTime: 0
@@ -1938,6 +2011,7 @@ GameObject:
   - component: {fileID: 1597582369}
   - component: {fileID: 1597582368}
   - component: {fileID: 1597582370}
+  - component: {fileID: 1597582371}
   m_Layer: 3
   m_Name: HeroKnight0
   m_TagString: Player
@@ -2055,9 +2129,12 @@ MonoBehaviour:
   hitAir: 0
   afterJump: 0
   isFacingRight: 0
+  hitTimeElapsed: 0
+  stunTimeElapsed: 0
   isJumping: 0
   isRolling: 0
   isAttacking: 0
+  isStun: 0
   isHit: 0
   isAirHit: 0
   rollingElapsedTime: 0
@@ -2188,6 +2265,8 @@ MonoBehaviour:
   - {x: 2, y: 3}
   attackDamages:
   - 10
+  attackStunTimes:
+  - 0
   canAttack: 1
   attackCheckElapsedTime: 0
   offsetAccordingToPlayerDirection: {x: -0.93, y: 0.23}
@@ -2195,6 +2274,22 @@ MonoBehaviour:
   monsterLayer:
     serializedVersion: 2
     m_Bits: 64
+--- !u!114 &1597582371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1597582364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d9664954338643909dd867133b3ec4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _flashColor: {r: 2.828427, g: 2.828427, b: 2.828427, a: 1}
+  _flashTime: 0.2
+  _defaultMAT: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  _flashMAT: {fileID: 2100000, guid: 9c5aec2b4eb704d5c9270ef643082009, type: 2}
 --- !u!1 &1599494763
 GameObject:
   m_ObjectHideFlags: 0
@@ -2291,7 +2386,7 @@ SpriteRenderer:
   m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 3.125, y: 1.71875}
+  m_Size: {x: 31.25, y: 15.46875}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -2346,6 +2441,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   combatController: {fileID: 1597582370}
+  playerController: {fileID: 1597582368}
 --- !u!1 &1862131733
 GameObject:
   m_ObjectHideFlags: 3
@@ -2446,6 +2542,8 @@ GameObject:
   - component: {fileID: 2006917274}
   - component: {fileID: 2006917273}
   - component: {fileID: 2006917272}
+  - component: {fileID: 2006917275}
+  - component: {fileID: 2006917276}
   m_Layer: 6
   m_Name: Monster_Goblin
   m_TagString: Monster
@@ -2589,6 +2687,51 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0.5}
   m_Size: {x: 0.7, y: 1.2}
   m_Direction: 0
+--- !u!114 &2006917275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2006917270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdbb719c0d97f4f19b70ba649e8fc1a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackBoundaries:
+  - {x: 2.68, y: 1.5}
+  attackBoundaryOffsets:
+  - {x: 0, y: 0.69}
+  attackKnockBacks:
+  - {x: 6, y: 6}
+  attackDamages:
+  - 10
+  attackStunTimes:
+  - 0
+  canAttack: 0
+  attackCheckElapsedTime: 0
+  offsetAccordingToPlayerDirection: {x: -0, y: 0.69}
+  attackCheckCols: []
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 8
+--- !u!114 &2006917276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2006917270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d9664954338643909dd867133b3ec4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _flashColor: {r: 2.828427, g: 2.828427, b: 2.828427, a: 1}
+  _flashTime: 0.1
+  _defaultMAT: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  _flashMAT: {fileID: 2100000, guid: 9c5aec2b4eb704d5c9270ef643082009, type: 2}
 --- !u!1 &2009248192
 GameObject:
   m_ObjectHideFlags: 0
@@ -2732,3 +2875,4 @@ SceneRoots:
   - {fileID: 713760454}
   - {fileID: 226787282}
   - {fileID: 2006917271}
+  - {fileID: 1247623082}

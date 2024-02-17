@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D _rigidbody2D;
     private Animator _animator;
     private CapsuleCollider2D _collider;
+    private DamageFlash _damageFlash;
 
     
     // store player's current state, value, or some;
@@ -50,11 +51,16 @@ public class PlayerController : MonoBehaviour
     public float afterJump;
     public bool isFacingRight;
     
+    [Space] [Header("- combat interaction")]
+    public float hitTimeElapsed;
+    public float stunTimeElapsed;
+    
     // check player's state;
     [Header("- is****")] 
     public bool isJumping;
     public bool isRolling;
     public bool isAttacking;
+    public bool isStun;
     public bool isHit;
     public bool isAirHit;
     
@@ -97,6 +103,7 @@ public class PlayerController : MonoBehaviour
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _animator = GetComponentInChildren<Animator>();
         _collider = GetComponent<CapsuleCollider2D>();
+        _damageFlash = GetComponent<DamageFlash>();
     }
 
     /*
@@ -129,8 +136,9 @@ public class PlayerController : MonoBehaviour
         UpdateAnimationParameters();
         if (canMove) UpdateGfxDirection();
         UpdateCanVariables();
+        UpdateHitState();
         CheckTimeElapsed(ref jumpingElapsedTime, ref isJumping);
-        
+        CheckTimeElapsed(ref stunTimeElapsed, ref isStun);
     }
     
     
@@ -278,7 +286,7 @@ public class PlayerController : MonoBehaviour
     
     private void UpdateSpeedByHit()
     {
-        speedByHit = Mathf.Lerp(speedByHit, 0, friction * Time.fixedDeltaTime);
+        if (isGrounded) speedByHit = Mathf.Lerp(speedByHit, 0, friction * Time.fixedDeltaTime);
     }
 
     private void ApplyMovement()
@@ -295,6 +303,7 @@ public class PlayerController : MonoBehaviour
         _animator.SetFloat("speedByMoving", speedByMove);
         _animator.SetFloat("yspeed", _rigidbody2D.velocity.y);
         _animator.SetBool("isGrounded", isGrounded);
+        _animator.SetBool("isHit", isHit);
     }
 
     public void UpdateGfxDirection()
@@ -322,24 +331,36 @@ public class PlayerController : MonoBehaviour
     {
         if (canMove)
         {
-            if (isRolling || isAttacking) canMove = false;
-        } else if (!isRolling && !isAttacking) canMove = true;
+            if (isRolling || isAttacking || isHit) canMove = false;
+        } else if (!isRolling && !isAttacking && !isHit) canMove = true;
     }
     private void UpdateCanJump()
     {
         if (canJump)
         {
-            if (!isGrounded || isAttacking) canJump = false;
+            if (!isGrounded || isAttacking || isHit) canJump = false;
             if (isRolling) canJump = false;
-        } else if (!isJumping && isGrounded && !isRolling && !isAttacking) canJump = true;
+        } else if (!isJumping && isGrounded && !isRolling && !isAttacking && !isHit) canJump = true;
     }
     private void UpdateCanRoll()
     {
         if (canRoll)
         {
-            if (!isGrounded || isAttacking) canRoll = false;
+            if (!isGrounded || isAttacking || isHit) canRoll = false;
             if (isRolling) canRoll = false;
-        } else if (isGrounded && !isRolling && !isAttacking) canRoll = true;
+        } else if (isGrounded && !isRolling && !isAttacking && !isHit) canRoll = true;
+    }
+    
+    private void UpdateHitState()
+    {
+        if (isGrounded)
+        {
+            hitTimeElapsed -= Time.deltaTime;
+            if (hitTimeElapsed <= 0 && !isStun)
+            {
+                isHit = false;
+            }
+        }
     }
     private void CheckTimeElapsed(ref float timeElapsed, ref bool state)
     {
@@ -370,9 +391,34 @@ public class PlayerController : MonoBehaviour
      * - Vector2 knockback : basically, AddForce(knockback.x * (player.x < monster.x ? -1 : 1),  tmp);
      * - float stunTime : stunTime, literally;
      */
-    public void Hit(float damage, Vector2 knockback, float stunTime)
+    public void Hit(float damage, Vector2 knockback, float stunTime, int direction)
     {
+        isHit = true;
+        if (stunTime > 0)
+        {
+            stunTimeElapsed = stunTime;
+            isStun = true;
+        }
         
+        hitTimeElapsed = 0.1f;
+        
+        // tmp
+        GameManager.Instance.TimeManager.ChangeTimeRate(0.5f, 1f);
+        
+        // flash effect
+        _damageFlash.Flash();
+
+        UpdateGfxDirection();
+        speedByHit = -knockback.x * direction;
+
+        _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, 0);
+        _rigidbody2D.AddForce(new Vector2(0, knockback.y), ForceMode2D.Impulse);
+        isGrounded = false;
+        isJumping = true;
+        canJump = false;
+        jumpingElapsedTime = jumpingDoneCheckTime;
+        
+        UpdateCanVariables();
     }
     
     #endregion
