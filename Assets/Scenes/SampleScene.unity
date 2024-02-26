@@ -289,6 +289,7 @@ GameObject:
   - component: {fileID: 191779519}
   - component: {fileID: 191779518}
   - component: {fileID: 191779517}
+  - component: {fileID: 191779522}
   m_Layer: 3
   m_Name: HeroKnight1
   m_TagString: Player
@@ -333,7 +334,8 @@ MonoBehaviour:
   - {x: 2, y: 3}
   attackDamages:
   - 10
-  attackStunTimes: []
+  attackStunTimes:
+  - 0
   canAttack: 1
   attackCheckElapsedTime: 0
   offsetAccordingToPlayerDirection: {x: -0.93, y: 0.23}
@@ -341,6 +343,9 @@ MonoBehaviour:
   monsterLayer:
     serializedVersion: 2
     m_Bits: 64
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &191779518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -550,6 +555,46 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0.18}
   m_Size: {x: 0.5, y: 1.24}
   m_Direction: 0
+--- !u!114 &191779522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 191779515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d9664954338643909dd867133b3ec4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _flashColor: {r: 2.828427, g: 2.828427, b: 2.828427, a: 1}
+  _flashTime: 0.2
+  _animationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.0036764713
+      value: 0.99693245
+      inSlope: -0.20449637
+      outSlope: -0.20449637
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.04194079
+    - serializedVersion: 3
+      time: 0.8977941
+      value: 0.055214725
+      inSlope: -2.5766892
+      outSlope: -2.5766892
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.01398025
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _defaultMAT: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  _flashMAT: {fileID: 2100000, guid: 9c5aec2b4eb704d5c9270ef643082009, type: 2}
 --- !u!1 &226787281
 GameObject:
   m_ObjectHideFlags: 0
@@ -1736,6 +1781,7 @@ GameObject:
   - component: {fileID: 1500082326}
   - component: {fileID: 1500082325}
   - component: {fileID: 1500082324}
+  - component: {fileID: 1500082329}
   m_Layer: 3
   m_Name: HeroKnight2
   m_TagString: Player
@@ -1780,7 +1826,8 @@ MonoBehaviour:
   - {x: 2, y: 3}
   attackDamages:
   - 10
-  attackStunTimes: []
+  attackStunTimes:
+  - 0
   canAttack: 1
   attackCheckElapsedTime: 0
   offsetAccordingToPlayerDirection: {x: -0.93, y: 0.23}
@@ -1788,6 +1835,9 @@ MonoBehaviour:
   monsterLayer:
     serializedVersion: 2
     m_Bits: 64
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &1500082325
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1997,6 +2047,46 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0.18}
   m_Size: {x: 0.5, y: 1.24}
   m_Direction: 0
+--- !u!114 &1500082329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1500082322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d9664954338643909dd867133b3ec4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _flashColor: {r: 2.828427, g: 2.828427, b: 2.828427, a: 1}
+  _flashTime: 0.2
+  _animationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.0036764713
+      value: 0.99693245
+      inSlope: -0.20449637
+      outSlope: -0.20449637
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.04194079
+    - serializedVersion: 3
+      time: 0.8977941
+      value: 0.055214725
+      inSlope: -2.5766892
+      outSlope: -2.5766892
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.01398025
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _defaultMAT: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  _flashMAT: {fileID: 2100000, guid: 9c5aec2b4eb704d5c9270ef643082009, type: 2}
 --- !u!1 &1597582364
 GameObject:
   m_ObjectHideFlags: 0
@@ -2240,6 +2330,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: f8107547-f9f2-4552-9863-1d9ceaad5dd2
     m_ActionName: Player/Attack[/Keyboard/a]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1597582370}
+        m_TargetAssemblyTypeName: HeroKnightCombatController, Assembly-CSharp
+        m_MethodName: OnSkill0
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 57b9d2aa-0fd1-466e-8f68-e57848deccc0
+    m_ActionName: Player/Skill0[/Keyboard/s]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -2259,14 +2365,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackBoundaries:
   - {x: 1.47, y: 1.27}
+  - {x: 6.04, y: 1.44}
   attackBoundaryOffsets:
+  - {x: 0.93, y: 0.23}
   - {x: 0.93, y: 0.23}
   attackKnockBacks:
   - {x: 2, y: 3}
+  - {x: 3, y: 6}
   attackDamages:
   - 10
+  - 20
   attackStunTimes:
   - 0
+  - 2
   canAttack: 1
   attackCheckElapsedTime: 0
   offsetAccordingToPlayerDirection: {x: -0.93, y: 0.23}
@@ -2274,6 +2385,9 @@ MonoBehaviour:
   monsterLayer:
     serializedVersion: 2
     m_Bits: 64
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!114 &1597582371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2288,6 +2402,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _flashColor: {r: 2.828427, g: 2.828427, b: 2.828427, a: 1}
   _flashTime: 0.2
+  _animationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.0036764713
+      value: 0.99693245
+      inSlope: -0.20449637
+      outSlope: -0.20449637
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.04194079
+    - serializedVersion: 3
+      time: 0.8977941
+      value: 0.055214725
+      inSlope: -2.5766892
+      outSlope: -2.5766892
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.01398025
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   _defaultMAT: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   _flashMAT: {fileID: 2100000, guid: 9c5aec2b4eb704d5c9270ef643082009, type: 2}
 --- !u!1 &1599494763
@@ -2730,6 +2868,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _flashColor: {r: 2.828427, g: 2.828427, b: 2.828427, a: 1}
   _flashTime: 0.1
+  _animationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.7258305
+      value: 0.56382215
+      inSlope: -1.3177419
+      outSlope: -1.3177419
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.08754138
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   _defaultMAT: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   _flashMAT: {fileID: 2100000, guid: 9c5aec2b4eb704d5c9270ef643082009, type: 2}
 --- !u!1 &2009248192

@@ -10,6 +10,8 @@ public class DamageFlash : MonoBehaviour
     [SerializeField] private Color _flashColor = Color.white;
     [SerializeField] private float _flashTime = 0.2f;
 
+    [SerializeField] private AnimationCurve _animationCurve;
+
     private SpriteRenderer _spriteRenderer;
     private Material _material;
 
@@ -42,7 +44,7 @@ public class DamageFlash : MonoBehaviour
         while (flashTimeElapsed < _flashTime)
         {
             flashTimeElapsed += Time.deltaTime;
-            currentFlashAmount = Mathf.Lerp(1f, 0f, flashTimeElapsed / _flashTime);
+            currentFlashAmount = Mathf.Lerp(1f, 0f, _animationCurve.Evaluate(1 - flashTimeElapsed / _flashTime));
 
             _spriteRenderer.material.SetFloat("_FlashAmount", currentFlashAmount);
 
