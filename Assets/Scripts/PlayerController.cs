@@ -76,6 +76,23 @@ public class PlayerController : CreatureController
     
     
     #endregion
+    
+    #region physics update functions
+
+    protected override void UpdateSpeedByRoll()
+    {
+        base.UpdateSpeedByRoll();
+        if (isRolling)
+        {
+            gameObject.layer = 8; // player rolling
+        }
+        else
+        {
+            gameObject.layer = 3; // player
+        }
+    }
+
+    #endregion
 
     #region update functions
 

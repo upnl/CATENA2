@@ -363,7 +363,6 @@ MonoBehaviour:
   jumpPower: 10
   rollPower: 8
   maximumSlopeAngle: 0
-  playerState: 0
   speedByMove: 0
   speedByRoll: 0
   speedByHit: 0
@@ -385,13 +384,10 @@ MonoBehaviour:
   isStun: 0
   isHit: 0
   isAirHit: 0
-  rollingElapsedTime: 0
-  rollingDoneCheckTime: 0.6
   jumpingElapsedTime: 0
   jumpingDoneCheckTime: 0.3
   canMove: 1
   canJump: 0
-  canRoll: 1
   footPos: {fileID: 1599494764}
   downFromFoot: 0.12
   groundLayer:
@@ -399,6 +395,9 @@ MonoBehaviour:
     m_Bits: 128
   friction: 5
   rollFriction: 3
+  rollingElapsedTime: 0
+  rollingDoneCheckTime: 0.6
+  canRoll: 1
 --- !u!114 &191779519
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -488,6 +487,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: f8107547-f9f2-4552-9863-1d9ceaad5dd2
     m_ActionName: Player/Attack[/Keyboard/a]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 57b9d2aa-0fd1-466e-8f68-e57848deccc0
+    m_ActionName: Player/Skill0[/Keyboard/s]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -1855,7 +1858,6 @@ MonoBehaviour:
   jumpPower: 10
   rollPower: 8
   maximumSlopeAngle: 0
-  playerState: 0
   speedByMove: 0
   speedByRoll: 0
   speedByHit: 0
@@ -1877,13 +1879,10 @@ MonoBehaviour:
   isStun: 0
   isHit: 0
   isAirHit: 0
-  rollingElapsedTime: 0
-  rollingDoneCheckTime: 0.6
   jumpingElapsedTime: 0
   jumpingDoneCheckTime: 0.3
   canMove: 1
   canJump: 0
-  canRoll: 1
   footPos: {fileID: 138237509}
   downFromFoot: 0.12
   groundLayer:
@@ -1891,6 +1890,9 @@ MonoBehaviour:
     m_Bits: 128
   friction: 5
   rollFriction: 3
+  rollingElapsedTime: 0
+  rollingDoneCheckTime: 0.6
+  canRoll: 1
 --- !u!114 &1500082326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1980,6 +1982,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: f8107547-f9f2-4552-9863-1d9ceaad5dd2
     m_ActionName: Player/Attack[/Keyboard/a]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 57b9d2aa-0fd1-466e-8f68-e57848deccc0
+    m_ActionName: Player/Skill0[/Keyboard/s]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -2205,7 +2211,6 @@ MonoBehaviour:
   jumpPower: 10
   rollPower: 8
   maximumSlopeAngle: 0
-  playerState: 0
   speedByMove: 0
   speedByRoll: 0
   speedByHit: 0
@@ -2227,13 +2232,10 @@ MonoBehaviour:
   isStun: 0
   isHit: 0
   isAirHit: 0
-  rollingElapsedTime: 0
-  rollingDoneCheckTime: 0.6
   jumpingElapsedTime: 0
   jumpingDoneCheckTime: 0.3
   canMove: 1
   canJump: 0
-  canRoll: 1
   footPos: {fileID: 803737351}
   downFromFoot: 0.12
   groundLayer:
@@ -2241,6 +2243,9 @@ MonoBehaviour:
     m_Bits: 128
   friction: 5
   rollFriction: 3
+  rollingElapsedTime: 0
+  rollingDoneCheckTime: 0.6
+  canRoll: 1
 --- !u!114 &1597582369
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2721,12 +2726,10 @@ MonoBehaviour:
   speed: 3
   accel: 1
   jumpPower: 10
-  playerDetectBox: {x: 7, y: 6}
-  attackTriggerBox: {x: 2.5, y: 3}
-  changeActionInterval: 1
-  changeActionIntervalElapsed: 0
+  rollPower: 0
   maximumSlopeAngle: 60
   speedByMove: 0
+  speedByRoll: 0
   speedByHit: 0
   speedByDash: 0
   currentVelocity: {x: 0, y: 0}
@@ -2738,13 +2741,10 @@ MonoBehaviour:
   hitAir: 0
   afterJump: 0
   isFacingRight: 0
-  isChasingPlayer: 0
-  playerDetectTime: 10
-  playerDetectTimeElapsed: 0
-  playerGameObject: {fileID: 0}
   hitTimeElapsed: 0
   stunTimeElapsed: 0
   isJumping: 0
+  isRolling: 0
   isAttacking: 0
   isStun: 0
   isHit: 0
@@ -2758,11 +2758,20 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 128
+  friction: 5
+  rollFriction: 0
+  playerDetectBox: {x: 7, y: 6}
+  attackTriggerBox: {x: 2.5, y: 3}
+  changeActionInterval: 1
+  changeActionIntervalElapsed: 0
+  isChasingPlayer: 0
+  playerDetectTime: 10
+  playerDetectTimeElapsed: 0
+  playerGameObject: {fileID: 0}
   playerLayer:
     serializedVersion: 2
     m_Bits: 8
   playerDetectColsArray: []
-  friction: 5
 --- !u!50 &2006917273
 Rigidbody2D:
   serializedVersion: 4

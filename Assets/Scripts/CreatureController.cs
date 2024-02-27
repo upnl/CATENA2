@@ -96,7 +96,7 @@ public class CreatureController : MonoBehaviour
     
     #region Event functions
     
-    private void Start()
+    protected virtual void Start()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _animator = GetComponentInChildren<Animator>();
@@ -217,19 +217,10 @@ public class CreatureController : MonoBehaviour
     /**
      * currently, UpdateSpeedBy**** functions below are just applying lerp to each variables;
      * I'll fix this later for game purpose...
-     */
-    private void UpdateSpeedByRoll()
+     */ 
+    protected virtual void UpdateSpeedByRoll()
     {
         speedByRoll = Mathf.Lerp(speedByRoll, 0, rollFriction * Time.fixedDeltaTime);
-
-        if (isRolling)
-        {
-            gameObject.layer = 8; // player rolling
-        }
-        else
-        {
-            gameObject.layer = 3; // player
-        }
     }
     private void UpdateSpeedByDash()
     {

@@ -89,9 +89,9 @@ public class MonsterCombatController : MonoBehaviour
         {
             if (i.CompareTag("Player"))
             {
-                PlayerController playerController = i.GetComponent<PlayerController>();
+                CreatureController creatureController = i.GetComponent<CreatureController>();
                 int attackDirection = i.transform.position.x > transform.position.x ? -1 : 1;
-                playerController.Hit(attackDamages[index], attackKnockBacks[index], attackStunTimes[index], attackDirection);
+                creatureController.Hit(attackDamages[index], attackKnockBacks[index], attackStunTimes[index], attackDirection);
             }
         }
     }
