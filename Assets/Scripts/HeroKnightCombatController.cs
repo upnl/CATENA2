@@ -11,10 +11,13 @@ public class HeroKnightCombatController : CombatController
     {
         if (canAttack && value.started)
         {
+            AnimationEvents.SetSlowMotionOption(false, 0, 0);
+            
+            currentAttackIndex = 0;
+            
             PlayerController.UpdateGfxDirection();
             Animator.SetTrigger("attack");
-            PlayerController.Dash(5f);
-            canAttack = false;
+            UnableCanAttacks();
             attackCheckElapsedTime = 0.1f;
 
             PlayerController.UpdateCanVariables();
@@ -23,10 +26,23 @@ public class HeroKnightCombatController : CombatController
 
     public void OnSkill0(InputAction.CallbackContext value)
     {
-        if (canAttack && value.started)
+        if (canAirAttack && value.started)
         {
             PlayerController.UpdateGfxDirection();
             StartCoroutine(Skill0());
+            UnableCanAttacks();
+            attackCheckElapsedTime = 0.1f;
+
+            PlayerController.UpdateCanVariables();
+        }
+    }
+    
+    public void OnSkill1(InputAction.CallbackContext value)
+    {
+        if (canAttack && value.started)
+        {
+            PlayerController.UpdateGfxDirection();
+            StartCoroutine(Skill1());
             canAttack = false;
             attackCheckElapsedTime = 0.1f;
 
@@ -36,6 +52,12 @@ public class HeroKnightCombatController : CombatController
 
     private IEnumerator Skill0()
     {
+        // apply slow motion; 
+        AnimationEvents.SetSlowMotionOption(true, slowMotionInfos[1].slowMotionRate, slowMotionInfos[1].slowMotionTime);
+        
+        currentAttackIndex = 1;
+        
+        // skill logic;
         Animator.SetTrigger("skill0");
         PlayerController.Jump(10f);
         PlayerController.Dash(10f);
@@ -44,10 +66,41 @@ public class HeroKnightCombatController : CombatController
 
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 10f, groundLayer);
 
-        PlayerController.Dash(1f);
+        Dash(1);
         
         transform.position = hit.point;
         Animator.SetTrigger("skill0_land");
+    }
+    
+    private IEnumerator Skill1()
+    {
+        // apply slow motion;
+        AnimationEvents.SetSlowMotionOption(true, slowMotionInfos[2].slowMotionRate, slowMotionInfos[2].slowMotionTime);
+
+        currentAttackIndex = 2;
+        
+        Animator.SetTrigger("attack");
+
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, 
+            Vector2.right * (PlayerController.isFacingRight? 1 : -1), 10f, monsterLayer);
+
+        if (hit)
+        {
+            if (PlayerController.isFacingRight)
+            {
+                transform.position = hit.point + Vector2.left;
+            }
+            else
+            {
+                transform.position = hit.point + Vector2.right;
+            }
+            
+            hit.transform.GetComponent<CreatureController>().StopHitKnockBack();
+        }
+
+        yield return null;
+
+        Dash(2);
     }
 
     protected override void UpdateCanAttack()

@@ -346,10 +346,7 @@ public class CreatureController : MonoBehaviour
         }
         
         hitTimeElapsed = 0.1f;
-        
-        // tmp
-        GameManager.Instance.TimeManager.ChangeTimeRate(0.5f, 1f);
-        
+
         // flash effect
         _damageFlash.Flash();
 
@@ -364,6 +361,19 @@ public class CreatureController : MonoBehaviour
         jumpingElapsedTime = jumpingDoneCheckTime;
         
         UpdateCanVariables();
+    }
+    
+    public void Hit(float damage, Vector2 knockback, float stunTime, int direction, float slowMotionRate, float slowMotionTime)
+    {
+        Hit(damage, knockback, stunTime, direction);
+        GameManager.Instance.TimeManager.ChangeTimeRate(slowMotionRate, slowMotionTime);
+    }
+
+    
+    // tmp functions
+    public void StopHitKnockBack()
+    {
+        speedByHit = 0f;
     }
     
     #endregion
