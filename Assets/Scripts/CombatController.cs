@@ -18,20 +18,9 @@ public class CombatController : MonoBehaviour
     protected Rigidbody2D Rigidbody => _rigidbody;
     protected PlayerAnimationEvents AnimationEvents => _animationEvents;
     
-    // Player's attack informations
-    [Serializable]
-    public class SlowMotionInfo
-    {
-        public float slowMotionRate;
-        public float slowMotionTime;
-    }
-    public Vector2[] attackBoundaries;
-    public Vector2[] attackBoundaryOffsets;
-    public Vector2[] attackKnockBacks;
-    public float[] attackDamages;
-    public float[] attackStunTimes;
-    public float[] attackDashes;
-    public SlowMotionInfo[] slowMotionInfos;
+    // Player's attack information;
+
+    public AttackInfo[] attackInfos;
     
     // can****; indicate if player can do some action;
     public bool canAttack; // ground attack;
@@ -42,7 +31,8 @@ public class CombatController : MonoBehaviour
     
     // store current states;
     public Vector2 offsetAccordingToPlayerDirection;
-    public int currentAttackIndex;
+    public int currentAttackIndex; // the index of an attack cycle (like skill0, skill1, etc.)
+    public int currentAttackNumber; // the number of attack in the same attack cycle (like first attack in skill1, second attack in skill1, etc.)
 
     // help player-monster combat interaction;
     public Collider2D[] attackCheckCols;
@@ -66,16 +56,20 @@ public class CombatController : MonoBehaviour
     {
         Gizmos.color = Color.blue;
         
-        for (int i = 0; i<attackBoundaries.Length; i++)
+        for (int i = 0; i<attackInfos.Length; i++)
         {
-            offsetAccordingToPlayerDirection = attackBoundaryOffsets[i];
-            offsetAccordingToPlayerDirection.x *= (transform.rotation.y < 0 ? 1 : -1);
-            Gizmos.DrawWireCube((Vector2) transform.position + offsetAccordingToPlayerDirection, 
-                attackBoundaries[i] );
-        }
-        
-    }
+            for (int j = 0; j < attackInfos[i].AttackBoundaries.Length; j++)
+            {
+                Gizmos.color += Color.white * (0.3f / attackInfos.Length);
 
+                offsetAccordingToPlayerDirection = attackInfos[i].AttackBoundaryOffsets[j];
+                offsetAccordingToPlayerDirection.x *= (transform.rotation.y < 0 ? 1 : -1);
+                Gizmos.DrawWireCube((Vector2)transform.position + offsetAccordingToPlayerDirection,
+                    attackInfos[i].AttackBoundaries[j]);
+            }
+        }
+    }
+    
     protected virtual void UpdateCanAttack()
     {
         if (canAttack)
@@ -99,34 +93,20 @@ public class CombatController : MonoBehaviour
         } else if (attackCheckElapsedTime <= 0 && !_playerController.isRolling && !_playerController.isAttacking && !_playerController.isHit) canAirAttack = true;
     }
 
-    public void Attack(int index)
-    {
-        offsetAccordingToPlayerDirection = attackBoundaryOffsets[index];
-        offsetAccordingToPlayerDirection.x *= (transform.rotation.y < 0 ? 1 : -1);
-        attackCheckCols = Physics2D.OverlapBoxAll((Vector2)
-            transform.position + offsetAccordingToPlayerDirection, 
-            attackBoundaries[index], 0, monsterLayer);
-
-        foreach (var i in attackCheckCols)
-        {
-            if (i.CompareTag("Monster"))
-            {
-                CreatureController creatureController = i.GetComponent<CreatureController>();
-                int attackDirection = i.transform.position.x > transform.position.x ? -1 : 1;
-                creatureController.Hit(attackDamages[index], attackKnockBacks[index], attackStunTimes[index], attackDirection);
-            }
-        }
-    }
     
-    public void Attack(int index, float slowMotionRate, float slowMotionTime)
+    /* Hit Box Check;
+     * function "Attack" is overloaded;
+     * the one applys slow motion on the game and the other is not;
+     */
+    public void HitBoxCheck()
     {
-        index = currentAttackIndex;
+        AttackInfo attackInfo = attackInfos[currentAttackIndex];
         
-        offsetAccordingToPlayerDirection = attackBoundaryOffsets[index];
+        offsetAccordingToPlayerDirection = attackInfo.AttackBoundaryOffsets[currentAttackNumber];
         offsetAccordingToPlayerDirection.x *= (transform.rotation.y < 0 ? 1 : -1);
         attackCheckCols = Physics2D.OverlapBoxAll((Vector2)
             transform.position + offsetAccordingToPlayerDirection, 
-            attackBoundaries[index], 0, monsterLayer);
+            attackInfo.AttackBoundaries[currentAttackNumber], 0, monsterLayer);
 
         foreach (var i in attackCheckCols)
         {
@@ -134,11 +114,15 @@ public class CombatController : MonoBehaviour
             {
                 CreatureController creatureController = i.GetComponent<CreatureController>();
                 int attackDirection = i.transform.position.x > transform.position.x ? -1 : 1;
-                creatureController.Hit(attackDamages[index], attackKnockBacks[index], attackStunTimes[index], attackDirection, slowMotionRate, slowMotionTime);
+                creatureController.Hit(
+                    attackInfo.AttackDamages[currentAttackNumber], 
+                    attackInfo.AttackKnockBacks[currentAttackNumber], 
+                    attackInfo.AttackStunTimes[currentAttackNumber], attackDirection,
+                    attackInfo.SlowMotionInfos[currentAttackNumber].slowMotionRate,
+                    attackInfo.SlowMotionInfos[currentAttackNumber].slowMotionTime);
             }
         }
     }
-
     public void CanAttack()
     {
         canAttack = true;
@@ -153,6 +137,6 @@ public class CombatController : MonoBehaviour
 
     public void Dash(int index)
     {
-        _playerController.Dash(attackDashes[index]);
+        _playerController.Dash(attackInfos[currentAttackIndex].AttackDashes[currentAttackNumber]);
     }
 }

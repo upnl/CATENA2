@@ -171,9 +171,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   combatController: {fileID: 1500082324}
   playerController: {fileID: 0}
-  _causeSlowMotion: 0
-  _slowMotionRate: 0
-  _slowMotionTime: 0
 --- !u!95 &106305188
 Animator:
   serializedVersion: 5
@@ -329,23 +326,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cb89dd7580e8472391cc1195da88fb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackBoundaries:
-  - {x: 1.47, y: 1.27}
-  attackBoundaryOffsets:
-  - {x: 0.93, y: 0.23}
-  attackKnockBacks:
-  - {x: 2, y: 3}
-  attackDamages:
-  - 10
-  attackStunTimes:
-  - 0
-  attackDashes: []
-  slowMotionInfos: []
+  attackInfos:
+  - name: 
+    description: 
+    attackBoundaries:
+    - {x: 0, y: 0}
+    attackBoundaryOffsets:
+    - {x: 0, y: 0}
+    attackKnockBacks:
+    - {x: 0, y: 0}
+    attackDamages:
+    - 0
+    attackStunTimes:
+    - 0
+    attackDashes:
+    - 0
+    slowMotionInfos:
+    - slowMotionRate: 0.17
+      slowMotionTime: 0
   canAttack: 1
   canAirAttack: 0
   attackCheckElapsedTime: 0
   offsetAccordingToPlayerDirection: {x: -0.93, y: 0.23}
   currentAttackIndex: 0
+  currentAttackNumber: 0
   attackCheckCols: []
   monsterLayer:
     serializedVersion: 2
@@ -395,7 +399,7 @@ MonoBehaviour:
   jumpingDoneCheckTime: 0.3
   canMove: 1
   canJump: 0
-  footPos: {fileID: 1599494764}
+  footPos: {fileID: 803737351}
   downFromFoot: 0.12
   groundLayer:
     serializedVersion: 2
@@ -495,9 +499,37 @@ MonoBehaviour:
     m_ActionId: f8107547-f9f2-4552-9863-1d9ceaad5dd2
     m_ActionName: Player/Attack[/Keyboard/a]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 191779517}
+        m_TargetAssemblyTypeName: HeroKnightCombatController, Assembly-CSharp
+        m_MethodName: OnSkill0
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 57b9d2aa-0fd1-466e-8f68-e57848deccc0
     m_ActionName: Player/Skill0[/Keyboard/s]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 191779517}
+        m_TargetAssemblyTypeName: HeroKnightCombatController, Assembly-CSharp
+        m_MethodName: OnSkill1
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 963822fb-4dc0-4a19-b75d-475eacd4ee57
+    m_ActionName: Player/Skill1[/Keyboard/d]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -1721,9 +1753,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   combatController: {fileID: 191779517}
   playerController: {fileID: 0}
-  _causeSlowMotion: 0
-  _slowMotionRate: 0
-  _slowMotionTime: 0
 --- !u!95 &1035708598
 Animator:
   serializedVersion: 5
@@ -2128,23 +2157,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cb89dd7580e8472391cc1195da88fb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackBoundaries:
-  - {x: 1.47, y: 1.27}
-  attackBoundaryOffsets:
-  - {x: 0.93, y: 0.23}
-  attackKnockBacks:
-  - {x: 2, y: 3}
-  attackDamages:
-  - 10
-  attackStunTimes:
-  - 0
-  attackDashes: []
-  slowMotionInfos: []
+  attackInfos: []
   canAttack: 1
   canAirAttack: 0
   attackCheckElapsedTime: 0
   offsetAccordingToPlayerDirection: {x: -0.93, y: 0.23}
   currentAttackIndex: 0
+  currentAttackNumber: 0
   attackCheckCols: []
   monsterLayer:
     serializedVersion: 2
@@ -2194,7 +2213,7 @@ MonoBehaviour:
   jumpingDoneCheckTime: 0.3
   canMove: 1
   canJump: 0
-  footPos: {fileID: 138237509}
+  footPos: {fileID: 803737351}
   downFromFoot: 0.12
   groundLayer:
     serializedVersion: 2
@@ -2231,7 +2250,7 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1500082325}
+      - m_Target: {fileID: 1597582368}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
         m_MethodName: OnMove
         m_Mode: 0
@@ -2247,7 +2266,7 @@ MonoBehaviour:
     m_ActionName: Player/Move[/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1500082325}
+      - m_Target: {fileID: 1597582368}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
         m_MethodName: OnJump
         m_Mode: 0
@@ -2263,7 +2282,7 @@ MonoBehaviour:
     m_ActionName: Player/Jump[/Keyboard/space]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1500082325}
+      - m_Target: {fileID: 1597582368}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
         m_MethodName: OnRoll
         m_Mode: 0
@@ -2279,7 +2298,7 @@ MonoBehaviour:
     m_ActionName: Player/Roll[/Keyboard/downArrow]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1500082324}
+      - m_Target: {fileID: 1597582370}
         m_TargetAssemblyTypeName: HeroKnightCombatController, Assembly-CSharp
         m_MethodName: OnAttack
         m_Mode: 0
@@ -2294,9 +2313,37 @@ MonoBehaviour:
     m_ActionId: f8107547-f9f2-4552-9863-1d9ceaad5dd2
     m_ActionName: Player/Attack[/Keyboard/a]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1597582370}
+        m_TargetAssemblyTypeName: HeroKnightCombatController, Assembly-CSharp
+        m_MethodName: OnSkill0
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 57b9d2aa-0fd1-466e-8f68-e57848deccc0
     m_ActionName: Player/Skill0[/Keyboard/s]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1597582370}
+        m_TargetAssemblyTypeName: HeroKnightCombatController, Assembly-CSharp
+        m_MethodName: OnSkill1
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 963822fb-4dc0-4a19-b75d-475eacd4ee57
+    m_ActionName: Player/Skill1[/Keyboard/d]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -2695,49 +2742,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cb89dd7580e8472391cc1195da88fb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackBoundaries:
-  - {x: 1.47, y: 1.27}
-  - {x: 6.04, y: 1.44}
-  - {x: 1.47, y: 1.27}
-  attackBoundaryOffsets:
-  - {x: 0.93, y: 0.23}
-  - {x: 0.93, y: 0.23}
-  - {x: 0.93, y: 0.23}
-  attackKnockBacks:
-  - {x: 2, y: 3}
-  - {x: 3, y: 6}
-  - {x: 12, y: 4}
-  attackDamages:
-  - 10
-  - 20
-  - 15
-  attackStunTimes:
-  - 0
-  - 2
-  - 0.5
-  attackDashes:
-  - 5
-  - 3
-  - 5
-  slowMotionInfos:
-  - slowMotionRate: 0
-    slowMotionTime: 0
-  - slowMotionRate: 0.5
-    slowMotionTime: 0.3
-  - slowMotionRate: 0.2
-    slowMotionTime: 0.2
+  attackInfos:
+  - name: Normal Attack
+    description: just normal attack
+    attackBoundaries:
+    - {x: 2, y: 2}
+    attackBoundaryOffsets:
+    - {x: 1.74, y: 0}
+    attackKnockBacks:
+    - {x: 0, y: 0}
+    attackDamages: []
+    attackStunTimes: []
+    attackDashes: []
+    slowMotionInfos: []
+  - name: 
+    description: 
+    attackBoundaries:
+    - {x: 2, y: 2}
+    attackBoundaryOffsets:
+    - {x: 1.74, y: 0}
+    attackKnockBacks:
+    - {x: 0, y: 0}
+    attackDamages: []
+    attackStunTimes: []
+    attackDashes: []
+    slowMotionInfos: []
   canAttack: 1
   canAirAttack: 0
   attackCheckElapsedTime: 0
-  offsetAccordingToPlayerDirection: {x: -0.93, y: 0.23}
+  offsetAccordingToPlayerDirection: {x: -1.74, y: 0}
   currentAttackIndex: 0
+  currentAttackNumber: 0
   attackCheckCols: []
   monsterLayer:
     serializedVersion: 2
     m_Bits: 64
   groundLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 0
 --- !u!114 &1597582371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2930,9 +2972,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   combatController: {fileID: 1597582370}
   playerController: {fileID: 1597582368}
-  _causeSlowMotion: 0
-  _slowMotionRate: 0
-  _slowMotionTime: 0
 --- !u!1 &1862131733
 GameObject:
   m_ObjectHideFlags: 3

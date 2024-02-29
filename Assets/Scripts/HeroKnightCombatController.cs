@@ -6,14 +6,14 @@ using UnityEngine.InputSystem;
 
 public class HeroKnightCombatController : CombatController
 {
+    
     public LayerMask groundLayer;
     public void OnAttack(InputAction.CallbackContext value)
     {
         if (canAttack && value.started)
         {
-            AnimationEvents.SetSlowMotionOption(false, 0, 0);
-            
             currentAttackIndex = 0;
+            currentAttackNumber = 0;
             
             PlayerController.UpdateGfxDirection();
             Animator.SetTrigger("attack");
@@ -28,6 +28,9 @@ public class HeroKnightCombatController : CombatController
     {
         if (canAirAttack && value.started)
         {
+            currentAttackIndex = 1;
+            currentAttackNumber = 0;
+            
             PlayerController.UpdateGfxDirection();
             StartCoroutine(Skill0());
             UnableCanAttacks();
@@ -41,9 +44,12 @@ public class HeroKnightCombatController : CombatController
     {
         if (canAttack && value.started)
         {
+            currentAttackIndex = 2;
+            currentAttackNumber = 0;
+            
             PlayerController.UpdateGfxDirection();
             StartCoroutine(Skill1());
-            canAttack = false;
+            UnableCanAttacks();
             attackCheckElapsedTime = 0.1f;
 
             PlayerController.UpdateCanVariables();
@@ -52,11 +58,6 @@ public class HeroKnightCombatController : CombatController
 
     private IEnumerator Skill0()
     {
-        // apply slow motion; 
-        AnimationEvents.SetSlowMotionOption(true, slowMotionInfos[1].slowMotionRate, slowMotionInfos[1].slowMotionTime);
-        
-        currentAttackIndex = 1;
-        
         // skill logic;
         Animator.SetTrigger("skill0");
         PlayerController.Jump(10f);
@@ -74,11 +75,6 @@ public class HeroKnightCombatController : CombatController
     
     private IEnumerator Skill1()
     {
-        // apply slow motion;
-        AnimationEvents.SetSlowMotionOption(true, slowMotionInfos[2].slowMotionRate, slowMotionInfos[2].slowMotionTime);
-
-        currentAttackIndex = 2;
-        
         Animator.SetTrigger("attack");
 
         RaycastHit2D hit = Physics2D.Raycast(transform.position, 
