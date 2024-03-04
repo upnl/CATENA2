@@ -31,9 +31,21 @@ public class CombatController : MonoBehaviour
     
     // store current states;
     public Vector2 offsetAccordingToPlayerDirection;
-    public int currentAttackIndex; // the index of an attack cycle (like skill0, skill1, etc.)
-    public int currentAttackNumber; // the number of attack in the same attack cycle (like first attack in skill1, second attack in skill1, etc.)
+    private int _currentAttackIndex; // the index of an attack cycle (like skill0, skill1, etc.)
+    private int _currentAttackNumber; // the number of attack in the same attack cycle (like first attack in skill1, second attack in skill1, etc.)
 
+    public int CurrentAttackIndex
+    {
+        get => _currentAttackIndex;
+        set => _currentAttackIndex = value;
+    }
+    
+    public int CurrentAttackNumber
+    {
+        get => _currentAttackNumber;
+        set => _currentAttackNumber = value;
+    }
+    
     // help player-monster combat interaction;
     public Collider2D[] attackCheckCols;
     public LayerMask monsterLayer;
@@ -45,7 +57,7 @@ public class CombatController : MonoBehaviour
         _animationEvents = GetComponentInChildren<PlayerAnimationEvents>();
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         UpdateCanAttack();
         UpdateCanAirAttack();
@@ -100,13 +112,13 @@ public class CombatController : MonoBehaviour
      */
     public void HitBoxCheck()
     {
-        AttackInfo attackInfo = attackInfos[currentAttackIndex];
+        AttackInfo attackInfo = attackInfos[_currentAttackIndex];
         
-        offsetAccordingToPlayerDirection = attackInfo.AttackBoundaryOffsets[currentAttackNumber];
+        offsetAccordingToPlayerDirection = attackInfo.AttackBoundaryOffsets[_currentAttackNumber];
         offsetAccordingToPlayerDirection.x *= (transform.rotation.y < 0 ? 1 : -1);
         attackCheckCols = Physics2D.OverlapBoxAll((Vector2)
             transform.position + offsetAccordingToPlayerDirection, 
-            attackInfo.AttackBoundaries[currentAttackNumber], 0, monsterLayer);
+            attackInfo.AttackBoundaries[_currentAttackNumber], 0, monsterLayer);
 
         foreach (var i in attackCheckCols)
         {
@@ -115,11 +127,11 @@ public class CombatController : MonoBehaviour
                 CreatureController creatureController = i.GetComponent<CreatureController>();
                 int attackDirection = i.transform.position.x > transform.position.x ? -1 : 1;
                 creatureController.Hit(
-                    attackInfo.AttackDamages[currentAttackNumber], 
-                    attackInfo.AttackKnockBacks[currentAttackNumber], 
-                    attackInfo.AttackStunTimes[currentAttackNumber], attackDirection,
-                    attackInfo.SlowMotionInfos[currentAttackNumber].slowMotionRate,
-                    attackInfo.SlowMotionInfos[currentAttackNumber].slowMotionTime);
+                    attackInfo.AttackDamages[_currentAttackNumber], 
+                    attackInfo.AttackKnockBacks[_currentAttackNumber], 
+                    attackInfo.AttackStunTimes[_currentAttackNumber], attackDirection,
+                    attackInfo.SlowMotionInfos[_currentAttackNumber].slowMotionRate,
+                    attackInfo.SlowMotionInfos[_currentAttackNumber].slowMotionTime);
             }
         }
     }
@@ -137,6 +149,6 @@ public class CombatController : MonoBehaviour
 
     public void Dash(int index)
     {
-        _playerController.Dash(attackInfos[currentAttackIndex].AttackDashes[currentAttackNumber]);
+        _playerController.Dash(attackInfos[_currentAttackIndex].AttackDashes[_currentAttackNumber]);
     }
 }

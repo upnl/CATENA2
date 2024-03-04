@@ -348,8 +348,6 @@ MonoBehaviour:
   canAirAttack: 0
   attackCheckElapsedTime: 0
   offsetAccordingToPlayerDirection: {x: -0.93, y: 0.23}
-  currentAttackIndex: 0
-  currentAttackNumber: 0
   attackCheckCols: []
   monsterLayer:
     serializedVersion: 2
@@ -357,6 +355,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 0
+  _normalAttackNum: 0
 --- !u!114 &191779518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2162,8 +2161,6 @@ MonoBehaviour:
   canAirAttack: 0
   attackCheckElapsedTime: 0
   offsetAccordingToPlayerDirection: {x: -0.93, y: 0.23}
-  currentAttackIndex: 0
-  currentAttackNumber: 0
   attackCheckCols: []
   monsterLayer:
     serializedVersion: 2
@@ -2171,6 +2168,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 0
+  _normalAttackNum: 0
 --- !u!114 &1500082325
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2746,17 +2744,24 @@ MonoBehaviour:
   - name: Normal Attack
     description: just normal attack
     attackBoundaries:
-    - {x: 2, y: 2}
+    - {x: 2, y: 1.38}
+    - {x: 3.08, y: 1.38}
     attackBoundaryOffsets:
-    - {x: 1.74, y: 0}
+    - {x: 0.5, y: 0.36}
+    - {x: 0.5, y: 0.36}
     attackKnockBacks:
-    - {x: 0, y: 0}
-    attackDamages: []
-    attackStunTimes: []
-    attackDashes: []
-    slowMotionInfos: []
-  - name: 
-    description: 
+    - {x: 3, y: 3}
+    attackDamages:
+    - 10
+    attackStunTimes:
+    - 0
+    attackDashes:
+    - 3
+    slowMotionInfos:
+    - slowMotionRate: 0
+      slowMotionTime: 0
+  - name: Skill0
+    description: Jump Attack
     attackBoundaries:
     - {x: 2, y: 2}
     attackBoundaryOffsets:
@@ -2771,8 +2776,6 @@ MonoBehaviour:
   canAirAttack: 0
   attackCheckElapsedTime: 0
   offsetAccordingToPlayerDirection: {x: -1.74, y: 0}
-  currentAttackIndex: 0
-  currentAttackNumber: 0
   attackCheckCols: []
   monsterLayer:
     serializedVersion: 2
@@ -2780,6 +2783,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 0
+  _normalAttackNum: 0
 --- !u!114 &1597582371
 MonoBehaviour:
   m_ObjectHideFlags: 0

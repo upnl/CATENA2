@@ -8,12 +8,19 @@ public class HeroKnightCombatController : CombatController
 {
     
     public LayerMask groundLayer;
+    private int _normalAttackNum;
+
+    private void LateUpdate()
+    {
+        if (_normalAttackNum != 0 && !Animator.GetCurrentAnimatorStateInfo(0).IsTag("attack")) _normalAttackNum = 0;
+    }
+
     public void OnAttack(InputAction.CallbackContext value)
     {
         if (canAttack && value.started)
         {
-            currentAttackIndex = 0;
-            currentAttackNumber = 0;
+            CurrentAttackIndex = 0;
+            CurrentAttackNumber = _normalAttackNum++;
             
             PlayerController.UpdateGfxDirection();
             Animator.SetTrigger("attack");
@@ -28,8 +35,8 @@ public class HeroKnightCombatController : CombatController
     {
         if (canAirAttack && value.started)
         {
-            currentAttackIndex = 1;
-            currentAttackNumber = 0;
+            CurrentAttackIndex = 1;
+            CurrentAttackNumber = 0;
             
             PlayerController.UpdateGfxDirection();
             StartCoroutine(Skill0());
@@ -44,8 +51,8 @@ public class HeroKnightCombatController : CombatController
     {
         if (canAttack && value.started)
         {
-            currentAttackIndex = 2;
-            currentAttackNumber = 0;
+            CurrentAttackIndex = 2;
+            CurrentAttackNumber = 0;
             
             PlayerController.UpdateGfxDirection();
             StartCoroutine(Skill1());
