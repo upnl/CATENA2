@@ -355,7 +355,6 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 0
-  _normalAttackNum: 0
 --- !u!114 &191779518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -386,6 +385,7 @@ MonoBehaviour:
   hitAir: 0
   afterJump: 0
   isFacingRight: 0
+  superArmor: 0
   hitTimeElapsed: 0
   stunTimeElapsed: 0
   isJumping: 0
@@ -529,6 +529,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 963822fb-4dc0-4a19-b75d-475eacd4ee57
     m_ActionName: Player/Skill1[/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: d4989751-540f-408e-be5d-a1506ba49c10
+    m_ActionName: Player/Skill2[/Keyboard/f]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -2168,7 +2172,6 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 0
-  _normalAttackNum: 0
 --- !u!114 &1500082325
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2199,6 +2202,7 @@ MonoBehaviour:
   hitAir: 0
   afterJump: 0
   isFacingRight: 0
+  superArmor: 0
   hitTimeElapsed: 0
   stunTimeElapsed: 0
   isJumping: 0
@@ -2580,6 +2584,7 @@ MonoBehaviour:
   hitAir: 0
   afterJump: 0
   isFacingRight: 0
+  superArmor: 0
   hitTimeElapsed: 0
   stunTimeElapsed: 0
   isJumping: 0
@@ -2723,6 +2728,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 963822fb-4dc0-4a19-b75d-475eacd4ee57
     m_ActionName: Player/Skill1[/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1597582370}
+        m_TargetAssemblyTypeName: HeroKnightCombatController, Assembly-CSharp
+        m_MethodName: OnSkill2
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: d4989751-540f-408e-be5d-a1506ba49c10
+    m_ActionName: Player/Skill2[/Keyboard/f]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -2745,12 +2766,93 @@ MonoBehaviour:
     description: just normal attack
     attackBoundaries:
     - {x: 2, y: 1.38}
-    - {x: 3.08, y: 1.38}
+    - {x: 2, y: 1.38}
+    - {x: 2, y: 1.38}
     attackBoundaryOffsets:
     - {x: 0.5, y: 0.36}
     - {x: 0.5, y: 0.36}
+    - {x: 0.5, y: 0.36}
     attackKnockBacks:
-    - {x: 3, y: 3}
+    - {x: 3, y: 2}
+    - {x: 3, y: 2}
+    - {x: 5, y: 4}
+    attackDamages:
+    - 10
+    - 10
+    - 10
+    attackStunTimes:
+    - 0
+    - 0
+    - 0
+    attackDashes:
+    - 3
+    - 3
+    - 3
+    slowMotionInfos:
+    - slowMotionRate: 0
+      slowMotionTime: 0
+    - slowMotionRate: 0
+      slowMotionTime: 0
+    - slowMotionRate: 0
+      slowMotionTime: 0
+  - name: Rumbling Attack
+    description: jump and smash the ground
+    attackBoundaries:
+    - {x: 3.4, y: 1.38}
+    attackBoundaryOffsets:
+    - {x: 0.5, y: 0.36}
+    attackKnockBacks:
+    - {x: 3, y: 8}
+    attackDamages:
+    - 10
+    attackStunTimes:
+    - 1
+    attackDashes:
+    - 0
+    slowMotionInfos:
+    - slowMotionRate: 0.3
+      slowMotionTime: 0.5
+  - name: Chasing Attack
+    description: Chasing and attack
+    attackBoundaries:
+    - {x: 2, y: 1.38}
+    - {x: 2, y: 1.38}
+    - {x: 2, y: 1.38}
+    attackBoundaryOffsets:
+    - {x: 0.5, y: 0.36}
+    - {x: 0.5, y: 0.36}
+    - {x: 0.5, y: 0.36}
+    attackKnockBacks:
+    - {x: 8, y: 5}
+    - {x: 9, y: 5}
+    - {x: 10, y: 6}
+    attackDamages:
+    - 10
+    - 10
+    - 10
+    attackStunTimes:
+    - 0
+    - 0
+    - 0
+    attackDashes:
+    - 3
+    - 3
+    - 3
+    slowMotionInfos:
+    - slowMotionRate: 0.3
+      slowMotionTime: 0.2
+    - slowMotionRate: 0.3
+      slowMotionTime: 0.2
+    - slowMotionRate: 0.3
+      slowMotionTime: 0.4
+  - name: Guard Counter
+    description: guard and counter attack
+    attackBoundaries:
+    - {x: 2, y: 1.38}
+    attackBoundaryOffsets:
+    - {x: 0.5, y: 0.36}
+    attackKnockBacks:
+    - {x: 8, y: 5}
     attackDamages:
     - 10
     attackStunTimes:
@@ -2758,32 +2860,19 @@ MonoBehaviour:
     attackDashes:
     - 3
     slowMotionInfos:
-    - slowMotionRate: 0
-      slowMotionTime: 0
-  - name: Skill0
-    description: Jump Attack
-    attackBoundaries:
-    - {x: 2, y: 2}
-    attackBoundaryOffsets:
-    - {x: 1.74, y: 0}
-    attackKnockBacks:
-    - {x: 0, y: 0}
-    attackDamages: []
-    attackStunTimes: []
-    attackDashes: []
-    slowMotionInfos: []
+    - slowMotionRate: 0.1
+      slowMotionTime: 0.3
   canAttack: 1
   canAirAttack: 0
   attackCheckElapsedTime: 0
-  offsetAccordingToPlayerDirection: {x: -1.74, y: 0}
+  offsetAccordingToPlayerDirection: {x: -0.5, y: 0.36}
   attackCheckCols: []
   monsterLayer:
     serializedVersion: 2
     m_Bits: 64
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
-  _normalAttackNum: 0
+    m_Bits: 128
 --- !u!114 &1597582371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3132,6 +3221,7 @@ MonoBehaviour:
   hitAir: 0
   afterJump: 0
   isFacingRight: 0
+  superArmor: 0
   hitTimeElapsed: 0
   stunTimeElapsed: 0
   isJumping: 0

@@ -50,7 +50,7 @@ public class CombatController : MonoBehaviour
     public Collider2D[] attackCheckCols;
     public LayerMask monsterLayer;
     
-    private void Start()
+    protected virtual void Start()
     {
         _playerController = GetComponent<PlayerController>();
         _animator = GetComponentInChildren<Animator>();

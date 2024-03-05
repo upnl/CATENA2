@@ -66,7 +66,7 @@ public class Expedition : MonoBehaviour
             players[input].GetComponent<Rigidbody2D>().velocity =
                 players[currentPlayerNum].GetComponent<Rigidbody2D>().velocity;
             
-            // block previous player's input
+            // block previous player's input << should be changed into other ways because of bugs;
             players[currentPlayerNum].GetComponent<PlayerInput>().actions = nonPlayerAction;
             players[input].GetComponent<PlayerInput>().actions = playerAction;
 

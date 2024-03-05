@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CreatureController : MonoBehaviour
 {
@@ -52,6 +53,7 @@ public class CreatureController : MonoBehaviour
     public bool hitAir;
     public float afterJump;
     public bool isFacingRight;
+    public bool superArmor;
     
     [Space] [Header("- combat interaction")]
     public float hitTimeElapsed;
@@ -84,6 +86,9 @@ public class CreatureController : MonoBehaviour
     // variables to check ground, wall
     [Header("- to check surroundings")]
     public float downFromFoot;
+    
+    // events to be subscribed;
+    public event EventHandler OnhitEvent;
     
     // tmp variables
     [Header("- tmp")]
@@ -336,15 +341,20 @@ public class CreatureController : MonoBehaviour
      * - Vector2 knockback : basically, AddForce(knockback.x * (player.x < monster.x ? -1 : 1),  tmp);
      * - float stunTime : stunTime, literally;
      */
-    public void Hit(float damage, Vector2 knockback, float stunTime, int direction)
+    public virtual void Hit(float damage, Vector2 knockback, float stunTime, int direction)
     {
-        isHit = true;
-        if (stunTime > 0)
+        if (!superArmor)
         {
-            stunTimeElapsed = stunTime;
-            isStun = true;
+            isHit = true;
+            if (stunTime > 0)
+            {
+                stunTimeElapsed = stunTime;
+                isStun = true;
+            }
         }
         
+        OnhitEvent?.Invoke(this, EventArgs.Empty);
+
         hitTimeElapsed = 0.1f;
 
         // flash effect
@@ -359,10 +369,11 @@ public class CreatureController : MonoBehaviour
         isJumping = true;
         canJump = false;
         jumpingElapsedTime = jumpingDoneCheckTime;
-        
+
         UpdateCanVariables();
     }
-    
+
+
     public void Hit(float damage, Vector2 knockback, float stunTime, int direction, float slowMotionRate, float slowMotionTime)
     {
         Hit(damage, knockback, stunTime, direction);
